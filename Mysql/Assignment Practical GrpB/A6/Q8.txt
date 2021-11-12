@@ -1,0 +1,57 @@
+mysql> delimiter //
+mysql> create function f4( d_name varchar(10))
+    -> returns int
+    -> deterministic
+    -> begin
+    -> declare total int;
+    -> select sum(salary) into total from instructor where dept_name=d_name;
+    -> return total;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.33 sec)
+
+mysql> select f4('Computer');
+    -> //
++----------------+
+| f4('Computer') |
++----------------+
+|          85000 |
++----------------+
+1 row in set (0.06 sec)
+
+mysql>
+
+
+
+
+
+
+
+
+
+
+
+
+
+mysql> delimiter //
+mysql> create procedure p9(in d_name varchar(10), out total int)
+    -> begin
+    -> select sum(salary) into total from instructor where dept_name=d_name;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.24 sec)
+
+mysql> call p9('Computer', @total);
+    -> //
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @total;
+    -> //
++--------+
+| @total |
++--------+
+|  85000 |
++--------+
+1 row in set (0.00 sec)
+
+mysql>

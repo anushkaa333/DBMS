@@ -1,0 +1,70 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 24
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use university;
+Database changed
+mysql> delimiter //
+mysql> create procedure p4(a int, b int, out c int)
+    -> begin
+    -> select (a+b) into c;
+    -> end; //
+Query OK, 0 rows affected (0.35 sec)
+
+mysql> call p4(5,5,@c);
+    -> //
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @c;
+    -> //
++------+
+| @c   |
++------+
+|   10 |
++------+
+1 row in set (0.00 sec)
+
+mysql>
+
+
+
+
+
+
+
+
+
+
+mysql> Delimiter //
+mysql> Create function f1(a int, b int)
+    -> Returns int
+    -> Deterministic
+    -> Begin
+    -> Declare c int;
+    -> Set c=a+b;
+    -> Return c;
+    -> End;
+    -> //
+Query OK, 0 rows affected (0.22 sec)
+
+mysql> select f1(5,6);
+    -> //
++---------+
+| f1(5,6) |
++---------+
+|      11 |
++---------+
+1 row in set (0.00 sec)
+
+mysql>
+
+

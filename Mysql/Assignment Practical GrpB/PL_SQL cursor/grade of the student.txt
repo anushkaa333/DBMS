@@ -1,0 +1,215 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 14
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use university;
+Database changed
+mysql> delete procedure cursor3;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'procedure cursor3' at line 1
+mysql> drop procedure cursor3;
+Query OK, 0 rows affected (0.47 sec)
+
+mysql> use university;
+Database changed
+mysql> delimiter //
+mysql> create procedure cursor3()
+    -> begin
+    -> declare done int default 0;
+    -> declare name varchar(10);
+    -> declare credits int;
+    -> declare cursor3 cursor for select sname, tot_credits from student;
+    -> declare continue handler for not found set done=1;
+    -> open cursor3;
+    -> loop1 : loop fetch cursor3 into name, credits from student;
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from student' at line 9
+mysql> delimiter //
+mysql> create procedure cursor3()
+    -> begin
+    -> declare done int default 0;
+    -> declare name varchar(10);
+    -> declare credits int;
+    -> declare cursor3 cursor for select sname, tot_credits from student;
+    -> declare continue handler for not found set done=1;
+    -> open cursor3;
+    -> loop1 : loop fetch cursor3 into name, credits;
+    -> if done then leave the loop1;
+    -> end if;
+    -> if
+    -> (credits>=9) then
+    -> select name, ('distination');
+    -> else if(credits>=8 && credits<9) then
+    -> select name, ('first class');
+    -> else if(credits>=7 && credits<8) then
+    -> select name, ('pass');
+    -> else
+    -> select name, ('fail');
+    -> end if;
+    -> end if;
+    -> end if;
+    -> end loop;
+    -> close cursor3;
+    -> end; //
+ERROR 1308 (42000): LEAVE with no matching label: the
+mysql> delimiter //
+mysql> begin
+    -> create procedure cursor3()
+    -> declare name varchar(10);
+    -> declare credits int;
+    -> declare cursor3 cursor for select sname, tot_credits from student;
+    -> declare continue handler for not found set done=1;
+    -> open cursor3;
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'create procedure cursor3()
+declare name varchar(10);
+declare credits int;
+declar' at line 2
+mysql> delimiter //
+mysql> create procedure cursor3()
+    -> begin
+    -> declare done int default 0;
+    -> declare name varchar(10);
+    -> declare credits int;
+    -> declare cursor3 cursor for select sname, tot_credits from student;
+    -> declare continue handler for not found set done=1;
+    -> open cursor3;
+    -> loop1 : loop fetch cursor3 into name, credits;
+    -> if done then leave  loop1;
+    -> end if;
+    -> if
+    -> (credits>=9) then
+    -> select name, ('distination');
+    -> else if(credits>=8 && credits<9) then
+    -> select name, ('first class');
+    -> else if(credits>=7 && credits<8) then
+    -> select name, ('pass');
+    -> else
+    -> select name, ('fail');
+    -> end if;
+    -> end loop;
+    -> create procedure cursor3()
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'loop;
+create procedure cursor3()' at line 22
+mysql> delimiter //
+mysql> begin
+    -> create procedure cursor3()
+    -> declare done int default 0;
+    -> declare name varchar(10);
+    -> declare credits int;
+    -> declare cursor3 cursor for select sname, tot_credits from student;
+    -> declare continue handler for not found set done=1;
+    -> open cursor3;
+    -> loop1 : loop fetch cursor3 into name, credits;
+    -> if done then leave  loop1;
+    -> end if;
+    -> if
+    -> (credits>=9) then
+    -> select name, ('distination');
+    -> else if(credits>=8 && credits<9) then
+    -> select name, ('first class');
+    -> else if(credits>=7 && credits<8) then
+    -> select name, ('pass');
+    -> else
+    -> select name, ('fail');
+    -> end if;
+    -> end if;
+    -> end if;
+    -> end loop;
+    -> close cursor3;
+    -> end; //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'create procedure cursor3()
+declare done int default 0;
+declare name varchar(10);' at line 2
+mysql> delimiter //
+mysql> create procedure cursor3()
+    -> begin
+    -> declare done int default 0;
+    -> declare name varchar(10);
+    -> declare credits int;
+    -> declare cursor3 cursor for select sname, tot_credits from student;
+    -> declare continue handler for not found set done=1;
+    -> open cursor3;
+    -> loop1 : loop fetch cursor3 into name, credits;
+    -> if done then leave  loop1;
+    -> end if;
+    -> if
+    -> (credits>=9) then
+    -> select name, ('distination');
+    -> else if(credits>=8 && credits<9) then
+    -> select name, ('first class');
+    -> else if(credits>=7 && credits<8) then
+    -> select name, ('pass');
+    -> else
+    -> select name, ('fail');
+    -> end if;
+    -> end if;
+    -> end if;
+    -> end loop;
+    -> close cursor3;
+    -> end; //
+Query OK, 0 rows affected, 2 warnings (0.24 sec)
+
+mysql> call cursor3();
+    -> //
++------+-------------+
+| name | first class |
++------+-------------+
+| A    | first class |
++------+-------------+
+1 row in set (0.05 sec)
+
++------+-------------+
+| name | distination |
++------+-------------+
+| B    | distination |
++------+-------------+
+1 row in set (0.07 sec)
+
++------+-------------+
+| name | distination |
++------+-------------+
+| C    | distination |
++------+-------------+
+1 row in set (0.10 sec)
+
++------+-------------+
+| name | distination |
++------+-------------+
+| D    | distination |
++------+-------------+
+1 row in set (0.12 sec)
+
++------+------+
+| name | pass |
++------+------+
+| E    | pass |
++------+------+
+1 row in set (0.14 sec)
+
++------+------+
+| name | fail |
++------+------+
+| F    | fail |
++------+------+
+1 row in set (0.17 sec)
+
++------+-------------+
+| name | distination |
++------+-------------+
+| G    | distination |
++------+-------------+
+1 row in set (0.19 sec)
+
+Query OK, 0 rows affected (0.21 sec)
+
+mysql>

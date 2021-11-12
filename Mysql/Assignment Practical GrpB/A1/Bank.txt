@@ -1,0 +1,158 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.20 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| bank               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.79 sec)
+
+mysql> use bank;
+Database changed
+mysql> show tables;
++----------------+
+| Tables_in_bank |
++----------------+
+| account        |
+| borrower       |
+| consumer       |
+| customer       |
+| loan           |
++----------------+
+5 rows in set (0.67 sec)
+
+mysql> show account;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'account' at line 1
+mysql> desc account;
++---------+------+------+-----+---------+-------+
+| Field   | Type | Null | Key | Default | Extra |
++---------+------+------+-----+---------+-------+
+| acc_no  | int  | NO   | PRI | NULL    |       |
+| balance | int  | YES  |     | NULL    |       |
+| ssn     | int  | YES  | MUL | NULL    |       |
++---------+------+------+-----+---------+-------+
+3 rows in set (0.06 sec)
+
+mysql> select * from account;
++--------+---------+------+
+| acc_no | balance | ssn  |
++--------+---------+------+
+|     11 |   34000 |    3 |
+|     12 |    2000 |    1 |
+|     24 |    4000 |    2 |
++--------+---------+------+
+3 rows in set (0.16 sec)
+
+mysql> desc borrower;
++---------+------+------+-----+---------+-------+
+| Field   | Type | Null | Key | Default | Extra |
++---------+------+------+-----+---------+-------+
+| cust_id | int  | YES  | MUL | NULL    |       |
+| loan_no | int  | NO   | PRI | NULL    |       |
++---------+------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from borrower;
++---------+---------+
+| cust_id | loan_no |
++---------+---------+
+|       3 |     111 |
+|       3 |     112 |
+|       3 |     113 |
++---------+---------+
+3 rows in set (0.35 sec)
+
+mysql> desc consumer;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| ssn    | int         | NO   | PRI | NULL    |       |
+| fname  | varchar(10) | YES  |     | NULL    |       |
+| lname  | varchar(10) | YES  |     | NULL    |       |
+| street | varchar(10) | YES  |     | NULL    |       |
+| city   | varchar(10) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from consumer;
++-----+---------+-------+--------+--------+
+| ssn | fname   | lname | street | city   |
++-----+---------+-------+--------+--------+
+|   1 | abc     | xyz   | srroad | pune   |
+|   2 | anushka | mulay | sn2    | Pune   |
+|   3 | manasi  | mulay | kasaba | Mumbai |
++-----+---------+-------+--------+--------+
+3 rows in set (0.01 sec)
+
+mysql> desc customer;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| cust_id   | int         | NO   | PRI | NULL    |       |
+| cust_name | varchar(10) | YES  |     | NULL    |       |
+| cust_addr | varchar(10) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select * from customer;
++---------+-----------+-----------+
+| cust_id | cust_name | cust_addr |
++---------+-----------+-----------+
+|       1 | abc       | Pune      |
+|       2 | xyz       | Mumbai    |
+|       3 | pqr       | Kolkata   |
+|       4 | uvw       | Bengaluru |
+|       5 | xyz       | Indore    |
++---------+-----------+-----------+
+5 rows in set (0.04 sec)
+
+mysql> desc loan;
++---------+------+------+-----+---------+-------+
+| Field   | Type | Null | Key | Default | Extra |
++---------+------+------+-----+---------+-------+
+| loan_no | int  | NO   | PRI | NULL    |       |
+| amount  | int  | YES  |     | NULL    |       |
++---------+------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from loan;
++---------+--------+
+| loan_no | amount |
++---------+--------+
+|     111 |   1000 |
+|     112 |   2000 |
+|     113 |   3000 |
++---------+--------+
+3 rows in set (0.02 sec)
+
+mysql> insert into loan (loan_no, amount) values (115, 5000);
+Query OK, 1 row affected (0.15 sec)
+
+mysql> select * from loan;
++---------+--------+
+| loan_no | amount |
++---------+--------+
+|     111 |   1000 |
+|     112 |   2000 |
+|     113 |   3000 |
+|     115 |   5000 |
++---------+--------+
+4 rows in set (0.00 sec)
+
+mysql>

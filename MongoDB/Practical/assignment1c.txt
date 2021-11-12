@@ -1,0 +1,724 @@
+ASSIGNMENT NO 1
+
+NAME: Anushka M Mulay
+ROLL NO: 35040
+BATCH : B
+CLASS : TE(IT)-A
+GROUP : C
+TITLE : Create a database with suitable example using MongoDB and implement
+1.Inserting and saving document (batch insert, insert validation)
+2. Removing document
+3. Updating document (document replacement, using modifiers,
+upserts, updating multiple documents, returning
+
+----------------------------------------------------------------------------
+1. CREATE A DATABASE AND THEN CREATE A COLLECTION INSIDE THE DATABASE
+> use bank;
+switched to db bank
+> db.createCollection("account");
+{ "ok" : 1 }
+> show collections;
+account
+
+2. INSERT DOCUMENTS IN THE COLLECTION
+> db.account.insert({acc_no:76543 , name:"ABC" , address:"pune" , phn_no:1234 ,balance:1000 });
+WriteResult({ "nInserted" : 1 })
+> db.account.insert({acc_no:76544, name:{"fname":"PQR","lname":"STU"},address:"mumbai",phn_no:9423,balance:2000});
+WriteResult({ "nInserted" : 1 })
+> db.account.insert({acc_no:56783,name:"ASD",address:"nashik",phn_no:[9977,9966],balance:3000});
+WriteResult({ "nInserted" : 1 })
+
+3. DISPLAY THE DOCUMENTS
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "ABC",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9977,
+                9966
+        ],
+        "balance" : 3000
+}
+
+4.UPDATE THE DOCUMENTS
+
+1) Update the document set name to riya with account no 76543
+> db.account.update({acc_no:76543},{$set:{name:"riya"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+2) change the phone no of customer with account no 56783 and add one more to it
+> db.account.update({acc_no:56783},{$set:{phn_no:[9432,9878,9908]}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "riya",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+
+3) Change the balance of customer to 10000 with account no 76544
+> db.account.update({acc_no:76544},{$set:{balance:10000}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "riya",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+
+5. DISPLAY THE DOCUMENTS IN DESCENDING ORDER OF THEIR BALANCE
+> db.account.find().sort({balance:-1}).pretty();
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "riya",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+
+6. DISPLAY THE DOCUMENTS IN ASCENDING ORDER OF THEIR NAMES
+> db.account.find().sort({name:1}).pretty();
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "riya",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+
+7. FIND CUSTOMERS WITH BALANCE LESS THAN 5000
+> db.account.find({$or:[{balance:{$lt:5000}}]}).pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "riya",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+
+8. FIND CUSTOMERS WITH EITHER BALANCE LESS THAN 5000 OR WITH ADDRESS PUNE
+> db.account.find({$or:[{balance:{$lt:5000}},{address:"pune"}]}).pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "riya",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+
+9. FIND CUSTOMERS WITH BALANCE LESS THAN 5000 AND ADDRESS IS PUNE
+> db.account.find({$and:[{balance:{$lt:5000}},{address:"pune"}]}).pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "riya",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+
+10.FIND CUSTOMERS WITH EITHER BALANCE LESS THAN 2000 OR WITH ADDRESS MUMBAI
+> db.account.find({$or:[{balance:{$gt:2000}},{address:"mumbai"}]}).pretty();
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+
+11.FIND CUSTOMERS WITH BALANCE GREATER THAN 5000 AND ADDRESS IS PUNE
+> db.account.find({$and:[{balance:{$gt:2000}},{address:"mumbai"}]}).pretty();
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+
+12.FIND CUSTOMERS WITH EITHER BALANCE LESS THAN EQUAL TO 3000 OR WITH NAME RIYA
+> db.account.find({$or:[{balance:{$lte:3000}},{name:"riya"}]}).pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "riya",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+> db.account.find({$and:[{balance:{$lte:3000}},{name:"riya"}]}).pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "riya",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+> db.account.find({$or:[{balance:{$gte:3000}},{name:"ASD"}]}).pretty();
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+
+13.FIND CUSTOMERS WITH BALANCE GREATER THAN EQUAL TO 3000 AND WITH NAME ASD
+> db.account.find({$and:[{balance:{$gte:3000}},{name:"ASD"}]}).pretty();
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+
+14.FIND CUSTOMERS WITH EITHER BALANCE NOT EQUAL TO 3000 OR WITH NAME ASD
+> db.account.find({$or:[{balance:{$ne:3000}},{name:"ASD"}]}).pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "riya",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+
+15.FIND CUSTOMERS WITH EITHER BALANCE NOT EQUAL TO 3000 OR WITH NAME RIYA
+> db.account.find({$or:[{balance:{$ne:3000}},{name:"riya"}]}).pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "riya",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+
+16.FIND CUSTOMERS WHOSE BALANCE IS 3000
+> db.account.find({balance:3000}).pretty();
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+
+17.INSERT A DOCUMENT FOR CUSTOMER WITH ACCOUNT NO 100 USING UPDATE
+> db.account.update({acc_no:100 ,balance:5000},{$set:{name:"MNO"}},{upsert:true});
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 1,
+        "nModified" : 0,
+        "_id" : ObjectId("5fba7de68b4354cedb95fcc5")
+})
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "riya",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("5fba7de68b4354cedb95fcc5"),
+        "acc_no" : 100,
+        "balance" : 5000,
+        "name" : "MNO"
+}
+
+18.MODIFY A DOCUMENT FOR CUSTOMER ACCOUNT NO 76543 USING UPDATE
+> db.account.update({acc_no:76543},{$set:{name:"JKL"}},{upsert:true});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+19.INSERT A DOCUMENT FOR CUSTOMER WITH ACCOUNT NO 101 USING UPDATE
+> db.account.update({acc_no:101,address:"delhi"},{$set:{name:"IOP"}},{upsert:true});
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 1,
+        "nModified" : 0,
+        "_id" : ObjectId("5fba7f1d8b4354cedb95fcd2")
+})
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "JKL",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("5fba7de68b4354cedb95fcc5"),
+        "acc_no" : 100,
+        "balance" : 5000,
+        "name" : "MNO"
+}
+{
+        "_id" : ObjectId("5fba7f1d8b4354cedb95fcd2"),
+        "acc_no" : 101,
+        "address" : "delhi",
+        "name" : "IOP"
+}
+
+20.INSERT A DOCUMENT FOR CUSTOMER WITH AMOUNT NO 102 USING UPDATE
+> db.account.update({amount_no:102,},{$set:{name:"PLM"}},{upsert:true});
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 1,
+        "nModified" : 0,
+        "_id" : ObjectId("5fba7f8d8b4354cedb95fcd9")
+})
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "JKL",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "ASD",
+        "address" : "nashik",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("5fba7de68b4354cedb95fcc5"),
+        "acc_no" : 100,
+        "balance" : 5000,
+        "name" : "MNO"
+}
+{
+        "_id" : ObjectId("5fba7f1d8b4354cedb95fcd2"),
+        "acc_no" : 101,
+        "address" : "delhi",
+        "name" : "IOP"
+}
+{
+        "_id" : ObjectId("5fba7f8d8b4354cedb95fcd9"),
+        "amount_no" : 102,
+        "name" : "PLM"
+}
+
+21.FIND THE CUSTOMERS WITH FIRST NAME AS "XYZ";
+> db.account.find({"name.fname":"PQR"}).pretty();
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+
+22.UPDATING MULTIPLE FIELDS
+UPDATE THE DETAILS OF CUSTOMER WITH ACCOUNT NO 56783
+> db.account.update({acc_no:56783},{$set:{name:"MNB",address:"chennai",balance:3500}},{upsert:true});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "JKL",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "MNB",
+        "address" : "chennai",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3500
+}
+{
+        "_id" : ObjectId("5fba7de68b4354cedb95fcc5"),
+        "acc_no" : 100,
+        "balance" : 5000,
+        "name" : "MNO"
+}
+{
+        "_id" : ObjectId("5fba7f1d8b4354cedb95fcd2"),
+        "acc_no" : 101,
+        "address" : "delhi",
+        "name" : "IOP"
+}
+{
+        "_id" : ObjectId("5fba7f8d8b4354cedb95fcd9"),
+        "amount_no" : 102,
+        "name" : "PLM"
+}
+
+DELETE A DOCUMENT
+23.DELETE THE DOCUMENT HAVING AMOUNT NO IS 102
+> db.account.remove({amount_no:102});
+WriteResult({ "nRemoved" : 1 })
+
+24.DELETE THE DOCUMENT WITH ACCOUNT NO 100
+> db.account.remove({acc_no:100});
+WriteResult({ "nRemoved" : 1 })
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "JKL",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "MNB",
+        "address" : "chennai",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3500
+}
+{
+        "_id" : ObjectId("5fba7f1d8b4354cedb95fcd2"),
+        "acc_no" : 101,
+        "address" : "delhi",
+        "name" : "IOP"
+}

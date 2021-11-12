@@ -1,0 +1,629 @@
+GROUP : B
+	NAME: Anushka M Mulay	
+	ROLL NO: 35040
+	BATCH: B
+	CLASS:   TE(IT)-A
+	STATEMENT: 8. Execute DDL statements which demonstrate the use of views. Try to update the base table using its
+	corresponding view. Also consider restrictions on updatable views and perform view creation from
+	multiple tables
+
+
+
+
+
+
+// View creation from single table ( with primary key)
+
+
+
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 14
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use university;
+Database changed
+mysql> select * from instructor;
++---------+-----------+--------+-----------+------------+
+| inst_id | inst_name | salary | dept_name | join_date  |
++---------+-----------+--------+-----------+------------+
+|     111 | ABC       |  85000 | Computer  | 2010-10-10 |
+|     112 | PQR       | 110000 | Music     | 2010-12-16 |
+|     113 | EFG       |  90000 | Physics   | NULL       |
+|     114 | XYZ       |  80000 | History   | NULL       |
+|     115 | LMN       | 110000 | Music     | NULL       |
+|     116 | UVW       |  90000 | Physics   | NULL       |
+|     117 | HIJ       |  85000 | Biology   | NULL       |
++---------+-----------+--------+-----------+------------+
+7 rows in set (0.26 sec)
+
+mysql> create view v1
+    -> as select inst_id, inst_name, salary from instructor;
+Query OK, 0 rows affected (0.42 sec)
+
+mysql> select * from v1;
++---------+-----------+--------+
+| inst_id | inst_name | salary |
++---------+-----------+--------+
+|     111 | ABC       |  85000 |
+|     112 | PQR       | 110000 |
+|     113 | EFG       |  90000 |
+|     114 | XYZ       |  80000 |
+|     115 | LMN       | 110000 |
+|     116 | UVW       |  90000 |
+|     117 | HIJ       |  85000 |
++---------+-----------+--------+
+7 rows in set (0.02 sec)
+
+mysql> insert into v1(inst_id, inst_name, salary) values (121, 'Jim', 20000);
+Query OK, 1 row affected (0.50 sec)
+
+mysql> select * from v1;
++---------+-----------+--------+
+| inst_id | inst_name | salary |
++---------+-----------+--------+
+|     111 | ABC       |  85000 |
+|     112 | PQR       | 110000 |
+|     113 | EFG       |  90000 |
+|     114 | XYZ       |  80000 |
+|     115 | LMN       | 110000 |
+|     116 | UVW       |  90000 |
+|     117 | HIJ       |  85000 |
+|     121 | Jim       |  20000 |
++---------+-----------+--------+
+8 rows in set (0.00 sec)
+
+
+
+mysql> insert into instructor(inst_id, inst_name,salary, dept_name, join_date) values (122,'Tom',1000, 'Computer', '2004-01-01');
+Query OK, 1 row affected (0.20 sec)
+
+mysql> select * from instructor;;
++---------+-----------+--------+-----------+------------+
+| inst_id | inst_name | salary | dept_name | join_date  |
++---------+-----------+--------+-----------+------------+
+|     111 | ABC       |  85000 | Computer  | 2010-10-10 |
+|     112 | PQR       | 110000 | Music     | 2010-12-16 |
+|     113 | EFG       |  90000 | Physics   | NULL       |
+|     114 | XYZ       |  80000 | History   | NULL       |
+|     115 | LMN       | 110000 | Music     | NULL       |
+|     116 | UVW       |  90000 | Physics   | NULL       |
+|     117 | HIJ       |  85000 | Biology   | NULL       |
+|     121 | Jim       |  20000 | NULL      | NULL       |
+|     122 | Tom       |   1000 | Computer  | 2004-01-01 |
++---------+-----------+--------+-----------+------------+
+9 rows in set (0.00 sec)
+
+ERROR:
+No query specified
+
+mysql> select * from v1;
++---------+-----------+--------+
+| inst_id | inst_name | salary |
++---------+-----------+--------+
+|     111 | ABC       |  85000 |
+|     112 | PQR       | 110000 |
+|     113 | EFG       |  90000 |
+|     114 | XYZ       |  80000 |
+|     115 | LMN       | 110000 |
+|     116 | UVW       |  90000 |
+|     117 | HIJ       |  85000 |
+|     121 | Jim       |  20000 |
+|     122 | Tom       |   1000 |
++---------+-----------+--------+
+9 rows in set (0.00 sec)
+
+
+
+
+mysql> update v1 set inst_name='Kane' where inst_id=122;
+Query OK, 1 row affected (0.17 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from v1;
++---------+-----------+--------+
+| inst_id | inst_name | salary |
++---------+-----------+--------+
+|     111 | ABC       |  85000 |
+|     112 | PQR       | 110000 |
+|     113 | EFG       |  90000 |
+|     114 | XYZ       |  80000 |
+|     115 | LMN       | 110000 |
+|     116 | UVW       |  90000 |
+|     117 | HIJ       |  85000 |
+|     121 | Jim       |  20000 |
+|     122 | Kane      |   1000 |
++---------+-----------+--------+
+9 rows in set (0.12 sec)
+
+mysql> select * from instructor;
++---------+-----------+--------+-----------+------------+
+| inst_id | inst_name | salary | dept_name | join_date  |
++---------+-----------+--------+-----------+------------+
+|     111 | ABC       |  85000 | Computer  | 2010-10-10 |
+|     112 | PQR       | 110000 | Music     | 2010-12-16 |
+|     113 | EFG       |  90000 | Physics   | NULL       |
+|     114 | XYZ       |  80000 | History   | NULL       |
+|     115 | LMN       | 110000 | Music     | NULL       |
+|     116 | UVW       |  90000 | Physics   | NULL       |
+|     117 | HIJ       |  85000 | Biology   | NULL       |
+|     121 | Jim       |  20000 | NULL      | NULL       |
+|     122 | Kane      |   1000 | Computer  | 2004-01-01 |
++---------+-----------+--------+-----------+------------+
+9 rows in set (0.00 sec)
+
+
+
+
+
+mysql> delete from instructor where inst_id=122;
+Query OK, 1 row affected (0.18 sec)
+
+mysql> select * from instructor;
++---------+-----------+--------+-----------+------------+
+| inst_id | inst_name | salary | dept_name | join_date  |
++---------+-----------+--------+-----------+------------+
+|     111 | ABC       |  85000 | Computer  | 2010-10-10 |
+|     112 | PQR       | 110000 | Music     | 2010-12-16 |
+|     113 | EFG       |  90000 | Physics   | NULL       |
+|     114 | XYZ       |  80000 | History   | NULL       |
+|     115 | LMN       | 110000 | Music     | NULL       |
+|     116 | UVW       |  90000 | Physics   | NULL       |
+|     117 | HIJ       |  85000 | Biology   | NULL       |
+|     121 | Jim       |  20000 | NULL      | NULL       |
++---------+-----------+--------+-----------+------------+
+8 rows in set (0.19 sec)
+
+mysql> select * from v1;
++---------+-----------+--------+
+| inst_id | inst_name | salary |
++---------+-----------+--------+
+|     111 | ABC       |  85000 |
+|     112 | PQR       | 110000 |
+|     113 | EFG       |  90000 |
+|     114 | XYZ       |  80000 |
+|     115 | LMN       | 110000 |
+|     116 | UVW       |  90000 |
+|     117 | HIJ       |  85000 |
+|     121 | Jim       |  20000 |
++---------+-----------+--------+
+8 rows in set (0.00 sec)
+
+
+
+
+
+
+// View creation from single table ( without primary key)
+
+
+
+
+
+
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 16
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use university;
+Database changed
+mysql> create view v2
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> select * from instructor;
++---------+-----------+--------+-----------+------------+
+| inst_id | inst_name | salary | dept_name | join_date  |
++---------+-----------+--------+-----------+------------+
+|     111 | ABC       |  85000 | Computer  | 2010-10-10 |
+|     112 | PQR       | 110000 | Music     | 2010-12-16 |
+|     113 | EFG       |  90000 | Physics   | NULL       |
+|     114 | XYZ       |  80000 | History   | NULL       |
+|     115 | LMN       | 110000 | Music     | NULL       |
+|     116 | UVW       |  90000 | Physics   | NULL       |
+|     117 | HIJ       |  85000 | Biology   | NULL       |
+|     121 | Jim       |  20000 | NULL      | NULL       |
++---------+-----------+--------+-----------+------------+
+8 rows in set (0.00 sec)
+
+
+
+mysql> create view v2
+    -> as select inst_name, salary, dept_name from instructor;
+Query OK, 0 rows affected (0.17 sec)
+
+mysql> select * from v2;
++-----------+--------+-----------+
+| inst_name | salary | dept_name |
++-----------+--------+-----------+
+| ABC       |  85000 | Computer  |
+| PQR       | 110000 | Music     |
+| EFG       |  90000 | Physics   |
+| XYZ       |  80000 | History   |
+| LMN       | 110000 | Music     |
+| UVW       |  90000 | Physics   |
+| HIJ       |  85000 | Biology   |
+| Jim       |  20000 | NULL      |
++-----------+--------+-----------+
+8 rows in set (0.00 sec)
+
+
+
+mysql> alter table instructor alter inst_id set default 0;
+Query OK, 0 rows affected (0.38 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+mysql> insert into v2(inst_name, salary, dept_name) values ('Will', 50000, 'Music');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from instructor;
++---------+-----------+--------+-----------+------------+
+| inst_id | inst_name | salary | dept_name | join_date  |
++---------+-----------+--------+-----------+------------+
+|       0 | Will      |  50000 | Music     | NULL       |
+|     111 | ABC       |  85000 | Computer  | 2010-10-10 |
+|     112 | PQR       | 110000 | Music     | 2010-12-16 |
+|     113 | EFG       |  90000 | Physics   | NULL       |
+|     114 | XYZ       |  80000 | History   | NULL       |
+|     115 | LMN       | 110000 | Music     | NULL       |
+|     116 | UVW       |  90000 | Physics   | NULL       |
+|     117 | HIJ       |  85000 | Biology   | NULL       |
+|     121 | Jim       |  20000 | NULL      | NULL       |
++---------+-----------+--------+-----------+------------+
+9 rows in set (0.04 sec)
+
+mysql> select * from v2;
++-----------+--------+-----------+
+| inst_name | salary | dept_name |
++-----------+--------+-----------+
+| Will      |  50000 | Music     |
+| ABC       |  85000 | Computer  |
+| PQR       | 110000 | Music     |
+| EFG       |  90000 | Physics   |
+| XYZ       |  80000 | History   |
+| LMN       | 110000 | Music     |
+| UVW       |  90000 | Physics   |
+| HIJ       |  85000 | Biology   |
+| Jim       |  20000 | NULL      |
++-----------+--------+-----------+
+9 rows in set (0.00 sec)
+
+mysql> update v2 set inst_name='CAD' where inst_name='Will';
+Query OK, 1 row affected (0.12 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from v2;
++-----------+--------+-----------+
+| inst_name | salary | dept_name |
++-----------+--------+-----------+
+| CAD       |  50000 | Music     |
+| ABC       |  85000 | Computer  |
+| PQR       | 110000 | Music     |
+| EFG       |  90000 | Physics   |
+| XYZ       |  80000 | History   |
+| LMN       | 110000 | Music     |
+| UVW       |  90000 | Physics   |
+| HIJ       |  85000 | Biology   |
+| Jim       |  20000 | NULL      |
++-----------+--------+-----------+
+9 rows in set (0.00 sec)
+
+mysql> select * from instructor;
++---------+-----------+--------+-----------+------------+
+| inst_id | inst_name | salary | dept_name | join_date  |
++---------+-----------+--------+-----------+------------+
+|       0 | CAD       |  50000 | Music     | NULL       |
+|     111 | ABC       |  85000 | Computer  | 2010-10-10 |
+|     112 | PQR       | 110000 | Music     | 2010-12-16 |
+|     113 | EFG       |  90000 | Physics   | NULL       |
+|     114 | XYZ       |  80000 | History   | NULL       |
+|     115 | LMN       | 110000 | Music     | NULL       |
+|     116 | UVW       |  90000 | Physics   | NULL       |
+|     117 | HIJ       |  85000 | Biology   | NULL       |
+|     121 | Jim       |  20000 | NULL      | NULL       |
++---------+-----------+--------+-----------+------------+
+9 rows in set (0.00 sec)
+
+mysql> delete from v2 where inst_name="CAD";
+Query OK, 1 row affected (0.25 sec)
+
+mysql> select * from v2;
++-----------+--------+-----------+
+| inst_name | salary | dept_name |
++-----------+--------+-----------+
+| ABC       |  85000 | Computer  |
+| PQR       | 110000 | Music     |
+| EFG       |  90000 | Physics   |
+| XYZ       |  80000 | History   |
+| LMN       | 110000 | Music     |
+| UVW       |  90000 | Physics   |
+| HIJ       |  85000 | Biology   |
+| Jim       |  20000 | NULL      |
++-----------+--------+-----------+
+8 rows in set (0.00 sec)
+
+mysql> select * from instructor;
++---------+-----------+--------+-----------+------------+
+| inst_id | inst_name | salary | dept_name | join_date  |
++---------+-----------+--------+-----------+------------+
+|     111 | ABC       |  85000 | Computer  | 2010-10-10 |
+|     112 | PQR       | 110000 | Music     | 2010-12-16 |
+|     113 | EFG       |  90000 | Physics   | NULL       |
+|     114 | XYZ       |  80000 | History   | NULL       |
+|     115 | LMN       | 110000 | Music     | NULL       |
+|     116 | UVW       |  90000 | Physics   | NULL       |
+|     117 | HIJ       |  85000 | Biology   | NULL       |
+|     121 | Jim       |  20000 | NULL      | NULL       |
++---------+-----------+--------+-----------+------------+
+8 rows in set (0.00 sec)
+
+
+
+
+
+
+// View creation from multiple tables
+
+
+
+
+
+
+mysql> use university;
+Database changed
+mysql> create view v5 *******For 2 tables********
+    -> as select inst_name, course_id
+    -> from instructor, teaches
+    -> where instructor.inst_id=teaches.inst_id;
+Query OK, 0 rows affected (0.26 sec)
+
+mysql> select * from v5;
++-----------+-----------+
+| inst_name | course_id |
++-----------+-----------+
+| STU       | Bio-1     |
+| EFG       | Phy-2     |
+| ABC       | CS-2      |
+| STU       | Bio-2     |
+| LMN       | Mu-1      |
++-----------+-----------+
+5 rows in set (0.10 sec)
+
+mysql> select inst_name, course_id
+    -> from instructor, teaches
+    -> where instructor.inst_id=teaches.inst_id;
++-----------+-----------+
+| inst_name | course_id |
++-----------+-----------+
+| ABC       | CS-2      |
+| EFG       | Phy-2     |
+| LMN       | Mu-1      |
+| STU       | Bio-1     |
+| STU       | Bio-2     |
++-----------+-----------+
+5 rows in set (0.13 sec)
+
+
+mysql> insert into v5 (inst_name, course_id) values ('PQR', 'Music');
+ERROR 1393 (HY000): Can not modify more than one base table through a join view 'university.v5'
+mysql> select * instructor;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'instructor' at line 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mysql> select * from instructor;
++---------+-----------+--------+-----------+
+| inst_id | inst_name | salary | dept_name |
++---------+-----------+--------+-----------+
+|     111 | ABC       |  85000 | Computer  |
+|     112 | PQR       | 110000 | Music     |
+|     113 | EFG       |  90000 | Physics   |
+|     114 | XYZ       |  80000 | History   |
+|     115 | LMN       | 110000 | Music     |
+|     116 | UVW       |  90000 | Physics   |
+|     117 | STU       |  85000 | Biology   |
++---------+-----------+--------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> update instructor set inst_name='GRE' where dept_name='Biology';
+Query OK, 1 row affected (0.20 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from instructor;
++---------+-----------+--------+-----------+
+| inst_id | inst_name | salary | dept_name |
++---------+-----------+--------+-----------+
+|     111 | ABC       |  85000 | Computer  |
+|     112 | PQR       | 110000 | Music     |
+|     113 | EFG       |  90000 | Physics   |
+|     114 | XYZ       |  80000 | History   |
+|     115 | LMN       | 110000 | Music     |
+|     116 | UVW       |  90000 | Physics   |
+|     117 | GRE       |  85000 | Biology   |
++---------+-----------+--------+-----------+
+7 rows in set (0.00 sec)
+
+
+mysql> select * from v5;
++-----------+-----------+
+| inst_name | course_id |
++-----------+-----------+
+| GRE       | Bio-1     |
+| EFG       | Phy-2     |
+| ABC       | CS-2      |
+| GRE       | Bio-2     |
+| LMN       | Mu-1      |
++-----------+-----------+
+5 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mysql> update v5 set inst_name='HIJ' where course_id='Bio-1';
+Query OK, 1 row affected (0.17 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from v5;
++-----------+-----------+
+| inst_name | course_id |
++-----------+-----------+
+| ABC       | CS-2      |
+| EFG       | Phy-2     |
+| LMN       | Mu-1      |
+| HIJ       | Bio-1     |
+| HIJ       | Bio-2     |
++-----------+-----------+
+5 rows in set (0.11 sec)
+
+mysql> select * from instructor;
++---------+-----------+--------+-----------+
+| inst_id | inst_name | salary | dept_name |
++---------+-----------+--------+-----------+
+|     111 | ABC       |  85000 | Computer  |
+|     112 | PQR       | 110000 | Music     |
+|     113 | EFG       |  90000 | Physics   |
+|     114 | XYZ       |  80000 | History   |
+|     115 | LMN       | 110000 | Music     |
+|     116 | UVW       |  90000 | Physics   |
+|     117 | HIJ       |  85000 | Biology   |
++---------+-----------+--------+-----------+
+7 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mysql> delete from v5 where course_id='Bio-1';
+ERROR 1395 (HY000): Can not delete from join view 'university.v5'
+mysql> delete from v5 where inst_name='ABC';
+ERROR 1395 (HY000): Can not delete from join view 'university.v5'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mysql> select * from instructor;
++---------+-----------+--------+-----------+
+| inst_id | inst_name | salary | dept_name |
++---------+-----------+--------+-----------+
+|     111 | ABC       |  85000 | Computer  |
+|     112 | PQR       | 110000 | Music     |
+|     113 | EFG       |  90000 | Physics   |
+|     114 | XYZ       |  80000 | History   |
+|     115 | LMN       | 110000 | Music     |
+|     116 | UVW       |  90000 | Physics   |
+|     117 | HIJ       |  85000 | Biology   |
++---------+-----------+--------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> delete from v5 where course_id='Bio-1';
+ERROR 1395 (HY000): Can not delete from join view 'university.v5'
+mysql> delete from v5 where inst_name='ABC';
+ERROR 1395 (HY000): Can not delete from join view 'university.v5'
+mysql> select * from teaches;
++---------+-----------+--------+----------+------+
+| inst_id | course_id | sec_id | semester | year |
++---------+-----------+--------+----------+------+
+|     117 | Bio-1     | s11    | I        | FY   |
+|     113 | Phy-2     | s12    | II       | FY   |
+|     111 | CS-2      | s13    | II       | SY   |
+|     117 | Bio-2     | s11    | I        | FY   |
+|     115 | Mu-1      | s14    | II       | TY   |
++---------+-----------+--------+----------+------+
+5 rows in set (0.00 sec)
+
+mysql> delete from instructor where inst_name='HIJ';
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`university`.`teaches`, CONSTRAINT `teaches_ibfk_1` FOREIGN KEY (`inst_id`) REFERENCES `instructor` (`inst_id`))
+mysql> delete from instructor where dept_name='Biology';
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`university`.`teaches`, CONSTRAINT `teaches_ibfk_1` FOREIGN KEY (`inst_id`) REFERENCES `instructor` (`inst_id`))
+mysql> delete from instructor where inst_id=117;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`university`.`teaches`, CONSTRAINT `teaches_ibfk_1` FOREIGN KEY (`inst_id`) REFERENCES `instructor` (`inst_id`))
+mysql>
+
+
+Conclusion : Thus, we have executed DDL statements which demonstrate the use of views & updated the base table using its
+	corresponding view. Also considered restrictions on updatable views and performed view creation from
+	multiple tables

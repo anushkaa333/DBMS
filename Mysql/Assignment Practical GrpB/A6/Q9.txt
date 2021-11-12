@@ -1,0 +1,154 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 16
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use university;
+Database changed
+mysql> delimiter //
+mysql> create procedure psal(id int, out sal int)
+    -> begin
+    -> select salary into sal from instructor where inst_id=id;
+    -> if(sal>65000) then
+    -> select ('the status is high');
+    -> else
+    -> select ('the status is low');
+    -> end if;;
+    -> end; //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ';
+end' at line 8
+mysql> delimiter //
+mysql> create procedure psal(id int, out sal int)
+    -> begin
+    -> select salary into sal from instructor where inst_id=id;
+    -> if(sal>65000) then
+    -> select ('the status is high');
+    -> else
+    -> select ('the status is low');
+    -> end if;
+    -> end; //
+Query OK, 0 rows affected (0.23 sec)
+
+mysql> select * from instructor;
+    -> //
++---------+-----------+--------+-----------+------------+
+| inst_id | inst_name | salary | dept_name | join_date  |
++---------+-----------+--------+-----------+------------+
+|     111 | ABC       |  85000 | Computer  | 2010-10-10 |
+|     112 | PQR       | 110000 | Music     | 2010-12-16 |
+|     113 | EFG       |  90000 | Physics   | NULL       |
+|     114 | XYZ       |  80000 | History   | NULL       |
+|     115 | LMN       | 110000 | Music     | NULL       |
+|     116 | UVW       |  90000 | Physics   | NULL       |
+|     117 | HIJ       |  85000 | Biology   | NULL       |
+|     121 | Jim       |  20000 | NULL      | NULL       |
++---------+-----------+--------+-----------+------------+
+8 rows in set (0.30 sec)
+
+mysql> call psal(114, @sal);
+    -> //
++--------------------+
+| the status is high |
++--------------------+
+| the status is high |
++--------------------+
+1 row in set (0.12 sec)
+
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> call psal(121, @sal);
+    -> //
++-------------------+
+| the status is low |
++-------------------+
+| the status is low |
++-------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mysql> delimiter //
+mysql> create function f2(iid int)
+    -> returns varchar(10)
+    -> deterministic
+    -> begin
+    -> declare sal int;
+    -> select salary into sal from instructor where inst_id=iid;
+    -> if(sal>65000) then
+    -> return 'high';
+    -> else
+    -> return 'low';
+    -> end if;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.20 sec)
+
+mysql> select f2(115);
+    -> //
++---------+
+| f2(115) |
++---------+
+| high    |
++---------+
+1 row in set (0.12 sec)
+
+mysql> select * from instructor;
+    -> //
++---------+-----------+--------+-----------+------------+
+| inst_id | inst_name | salary | dept_name | join_date  |
++---------+-----------+--------+-----------+------------+
+|     111 | ABC       |  85000 | Computer  | 2010-10-10 |
+|     112 | PQR       | 110000 | Music     | 2010-12-16 |
+|     113 | EFG       |  90000 | Physics   | NULL       |
+|     114 | XYZ       |  80000 | History   | NULL       |
+|     115 | LMN       | 110000 | Music     | NULL       |
+|     116 | UVW       |  90000 | Physics   | NULL       |
+|     117 | HIJ       |  85000 | Biology   | NULL       |
+|     121 | Jim       |  20000 | NULL      | NULL       |
++---------+-----------+--------+-----------+------------+
+8 rows in set (0.00 sec)
+
+mysql> select f2(121);
+    -> //
++---------+
+| f2(121) |
++---------+
+| low     |
++---------+
+1 row in set (0.00 sec)
+
+mysql>

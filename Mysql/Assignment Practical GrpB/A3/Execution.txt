@@ -1,0 +1,453 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use university;
+Database changed
+
+*****1. Display total salary of all staff members from instructor*****
+
+
+mysql> select sum(salary) as total from instructor;
++--------+
+| total  |
++--------+
+| 650000 |
++--------+
+1 row in set (0.11 sec)
+
+
+*****2.Display total salary of all staff members who are from music department*****
+
+
+mysql> select sum(salary) from instructor where dept_name='Music';
++-------------+
+| sum(salary) |
++-------------+
+|      220000 |
++-------------+
+1 row in set (0.10 sec)
+
+
+
+*****3.Find no. of staff memebers from physics department*****
+
+
+mysql> select count(inst_id) from instructor where dept_name='Physics';
++----------------+
+| count(inst_id) |
++----------------+
+|              2 |
++----------------+
+1 row in set (0.00 sec)
+
+
+
+*****4.Display average salary of all staff members from instructor*****
+
+mysql> select avg(salary) from instructor ;
++-------------+
+| avg(salary) |
++-------------+
+|  92857.1429 |
++-------------+
+1 row in set (0.01 sec)
+
+
+
+*****5.Display minimum salary from instructor*****
+
+mysql> select min(salary) from instructor ;
++-------------+
+| min(salary) |
++-------------+
+|       80000 |
++-------------+
+1 row in set (0.00 sec)
+
+
+*****6. Display maximum salary from instructor*****
+
+
+mysql> select max(salary) from instructor ;
++-------------+
+| max(salary) |
++-------------+
+|      110000 |
++-------------+
+1 row in set (0.00 sec)
+
+
+*****7. names of instructor not between 50000 and 65000*****
+
+
+mysql> select inst_name from instructor where salary not between 50000 and 65000;
++-----------+
+| inst_name |
++-----------+
+| ABC       |
+| PQR       |
+| EFG       |
+| XYZ       |
+| LMN       |
+| UVW       |
+| HIJ       |
++-----------+
+7 rows in set (0.01 sec)
+
+
+*****8. Display minimum & maximum no. of credits given to student in each department*****
+
+
+mysql> select min(tot_credits) as min, max(tot_credits), dept_name as max from student group by(dept_name);
++------+------------------+----------+
+| min  | max(tot_credits) | max      |
++------+------------------+----------+
+|    7 |                7 | Biology  |
+|    6 |                9 | Computer |
+|    9 |                9 | History  |
+|    8 |                9 | Music    |
+|    9 |                9 | Physics  |
++------+------------------+----------+
+5 rows in set (0.00 sec)
+
+
+*****9. Find average salary in each department*****
+
+mysql> select avg(salary), dept_name from instructor group by(dept_name);
++-------------+-----------+
+| avg(salary) | dept_name |
++-------------+-----------+
+|  85000.0000 | Biology   |
+|  85000.0000 | Computer  |
+|  80000.0000 | History   |
+| 110000.0000 | Music     |
+|  90000.0000 | Physics   |
++-------------+-----------+
+5 rows in set (0.00 sec)
+
+
+*****10. Find average salary in each department where average salary of all instructor is more than 40000*****
+
+
+mysql> select avg(salary), dept_name from instructor group by (dept_name) having avg(salary) > 40000;
++-------------+-----------+
+| avg(salary) | dept_name |
++-------------+-----------+
+|  85000.0000 | Biology   |
+|  85000.0000 | Computer  |
+|  80000.0000 | History   |
+| 110000.0000 | Music     |
+|  90000.0000 | Physics   |
++-------------+-----------+
+5 rows in set (0.10 sec)
+
+
+*****11.Find no. of instructor with department name in each department*****
+
+mysql> select count(inst_id), dept_name from instructor group by(dept_name);
++----------------+-----------+
+| count(inst_id) | dept_name |
++----------------+-----------+
+|              1 | Biology   |
+|              1 | Computer  |
+|              1 | History   |
+|              2 | Music     |
+|              2 | Physics   |
++----------------+-----------+
+5 rows in set (0.00 sec)
+
+
+*****12.Find department name with average salary not in between 10000 and 100000*****
+
+
+mysql> select avg(salary), dept_name from instructor group by(dept_name) having salary not between 10000 and 100000;
+ERROR 1054 (42S22): Unknown column 'salary' in 'having clause'
+mysql> select avg(salary), dept_name from instructor group by(dept_name) having avg(salary) not between 10000 and 100000;
++-------------+-----------+
+| avg(salary) | dept_name |
++-------------+-----------+
+| 110000.0000 | Music     |
++-------------+-----------+
+1 row in set (0.00 sec)
+
+
+*****13.Find all courses taught either in sem I or in sem II or both*****
+
+
+mysql> (select course_id from teaches where semester='I') union (select course_id from teaches where semester='II');
++-----------+
+| course_id |
++-----------+
+| Bio-1     |
+| Bio-2     |
+| Phy-2     |
+| CS-2      |
+| Mu-1      |
++-----------+
+5 rows in set (0.08 sec)
+
+
+*****14.Find out set of courses taught in sem I fy and sem II Ty*****
+
+mysql> (select course_id from teaches where semester='I' and year='FY') and course_id in (select course_id from teaches where semester='II' and year='TY');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'and course_id in (select course_id from teaches where semester='II' and year='TY' at line 1
+mysql> select course_id from teaches where semester='I' and year='FY' and course_id in (select course_id from teaches where semester='II' and year='TY');
+Empty set (0.13 sec)
+
+
+*****15.Find out set of courses taught in sem I fy but not in sem II Ty*****
+
+
+mysql> select course_id from teaches where semester='I' and year='FY' and course_id not in ( select course_id from teaches where semester='II' and year='TY');
++-----------+
+| course_id |
++-----------+
+| Bio-1     |
+| Bio-2     |
++-----------+
+2 rows in set (0.00 sec)
+
+
+*****16.Names of instructor with course id of all courses they teach*****
+
+mysql> select inst_name, course_id from instructor natural join teaches;
++-----------+-----------+
+| inst_name | course_id |
++-----------+-----------+
+| HIJ       | Bio-1     |
+| EFG       | Phy-2     |
+| ABC       | CS-2      |
+| HIJ       | Bio-2     |
+| LMN       | Mu-1      |
++-----------+-----------+
+5 rows in set (0.00 sec)
+
+
+*****17.Names of instructor along with title of all courses they teach*****
+
+
+mysql> select inst_name, title from instructor, course where instructor.dept_name= course.dept_name;
++-----------+--------------------+
+| inst_name | title              |
++-----------+--------------------+
+| ABC       | Intro to CS        |
+| ABC       | Robotics           |
+| PQR       | Music audio        |
+| PQR       | Music video promo  |
+| EFG       | Physics principles |
+| XYZ       | World History      |
+| LMN       | Music audio        |
+| LMN       | Music video promo  |
+| UVW       | Physics principles |
+| HIJ       | Into to bio        |
+| HIJ       | Genetics           |
++-----------+--------------------+
+11 rows in set (0.00 sec)
+
+
+*****18.Left outer join*****
+
+mysql> select inst_name, course_id from instructor left outer join teaches using(inst_id);
++-----------+-----------+
+| inst_name | course_id |
++-----------+-----------+
+| ABC       | CS-2      |
+| PQR       | NULL      |
+| EFG       | Phy-2     |
+| XYZ       | NULL      |
+| LMN       | Mu-1      |
+| UVW       | NULL      |
+| HIJ       | Bio-1     |
+| HIJ       | Bio-2     |
++-----------+-----------+
+8 rows in set (0.10 sec)
+
+
+*****19.Right outer join***** (similar to 16)
+
+
+mysql> select inst_name , course_id from instructor right outer join teaches using(inst_id);
++-----------+-----------+
+| inst_name | course_id |
++-----------+-----------+
+| HIJ       | Bio-1     |
+| EFG       | Phy-2     |
+| ABC       | CS-2      |
+| HIJ       | Bio-2     |
+| LMN       | Mu-1      |
++-----------+-----------+
+5 rows in set (0.00 sec)
+
+
+
+*****20.Inner join*****
+
+
+mysql> select inst_name , course_id from instructor inner join teaches using(inst_id);
++-----------+-----------+
+| inst_name | course_id |
++-----------+-----------+
+| HIJ       | Bio-1     |
+| EFG       | Phy-2     |
+| ABC       | CS-2      |
+| HIJ       | Bio-2     |
+| LMN       | Mu-1      |
++-----------+-----------+
+5 rows in set (0.00 sec)
+
+
+*****21.System date*****
+
+mysql> select SysDate();
++---------------------+
+| SysDate()           |
++---------------------+
+| 2020-09-30 00:07:39 |
++---------------------+
+1 row in set (0.00 sec)
+
+
+*****22.String length*****
+
+
+mysql> select length(inst_name) from instructor;
++-------------------+
+| length(inst_name) |
++-------------------+
+|                 3 |
+|                 3 |
+|                 3 |
+|                 3 |
+|                 3 |
+|                 3 |
+|                 3 |
++-------------------+
+7 rows in set (0.00 sec)
+
+
+*****23.Substring*****
+
+
+mysql> select dept_name, substr(dept_name,1,4) from department;
++-----------+-----------------------+
+| dept_name | substr(dept_name,1,4) |
++-----------+-----------------------+
+| Biology   | Biol                  |
+| Computer  | Comp                  |
+| History   | Hist                  |
+| Music     | Musi                  |
+| Physics   | Phys                  |
++-----------+-----------------------+
+5 rows in set (0.16 sec)
+
+
+*****24.Replace*****
+
+
+
+mysql> select replace (inst_name, 'EFG', 'DOH') from instructor;
++-----------------------------------+
+| replace (inst_name, 'EFG', 'DOH') |
++-----------------------------------+
+| ABC                               |
+| PQR                               |
+| DOH                               |
+| XYZ                               |
+| LMN                               |
+| UVW                               |
+| HIJ                               |
++-----------------------------------+
+7 rows in set (0.00 sec)
+
+
+
+*****25.Full Join*****
+
+
+mysql> select inst_name, course_id from teaches full join instructor using(inst_id);
++-----------+-----------+
+| inst_name | course_id |
++-----------+-----------+
+| HIJ       | Bio-1     |
+| EFG       | Phy-2     |
+| ABC       | CS-2      |
+| HIJ       | Bio-2     |
+| LMN       | Mu-1      |
++-----------+-----------+
+5 rows in set (0.00 sec)
+
+
+
+*****26.Use of now*****
+
+mysql> select now();
++---------------------+
+| now()               |
++---------------------+
+| 2020-09-30 00:06:11 |
++---------------------+
+1 row in set (0.01 sec)
+
+
+*****27. Avg capacity from classroom*****
+
+mysql> select avg(capacity) from classroom;
++---------------+
+| avg(capacity) |
++---------------+
+|      108.0000 |
++---------------+
+1 row in set (0.17 sec)
+
+
+*****28.Find names of instructor with salary amount between 60000 and 95000*****
+
+mysql> select salary,inst_name from instructor where salary between 60000 and 95000;
++--------+-----------+
+| salary | inst_name |
++--------+-----------+
+|  85000 | ABC       |
+|  90000 | EFG       |
+|  80000 | XYZ       |
+|  90000 | UVW       |
+|  85000 | HIJ       |
++--------+-----------+
+5 rows in set (0.00 sec)
+
+
+*****29.Find names of instructor with salary amount not between 30000 and 50000*****
+
+mysql> select salary,inst_name from instructor where salary not between 60000 and 95000;
++--------+-----------+
+| salary | inst_name |
++--------+-----------+
+| 110000 | PQR       |
+| 110000 | LMN       |
++--------+-----------+
+2 rows in set (0.00 sec)
+
+
+*****30. Select min and max classroom capacity from each building****
+
+
+mysql> select max(capacity) as max, min(capacity), building as min from classroom group by(building);
++------+---------------+-----+
+| max  | min(capacity) | min |
++------+---------------+-----+
+|  120 |           120 |   1 |
+|  120 |           120 |   2 |
+|   60 |            60 |   3 |
+|  180 |           180 |   4 |
+|   60 |            60 |   5 |
++------+---------------+-----+
+5 rows in set (0.00 sec)

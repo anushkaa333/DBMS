@@ -1,0 +1,287 @@
+Microsoft Windows [Version 10.0.19041.508]
+(c) 2020 Microsoft Corporation. All rights reserved.
+
+C:\Users\user>cd Program Files\MySQL\MySQL Server 8.0\bin
+The system cannot find the path specified.
+
+C:\Users\user>cd C:\Program Files\MySQL\MySQL Server 8.0\bin
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin> mysql -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 11
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| bank               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| university         |
++--------------------+
+6 rows in set (0.35 sec)
+
+mysql> create database college;
+Query OK, 1 row affected (0.11 sec)
+
+mysql> drop database college;
+Query OK, 0 rows affected (0.46 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| bank               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| university         |
++--------------------+
+6 rows in set (0.00 sec)
+
+mysql> create database college;
+Query OK, 1 row affected (0.09 sec)
+
+mysql> create table student;
+ERROR 1046 (3D000): No database selected
+mysql> use college;
+Database changed
+mysql> create table student;
+ERROR 1113 (42000): A table must have at least 1 column
+mysql> drop table student;
+ERROR 1051 (42S02): Unknown table 'college.student'
+mysql> create table student(id int primary key, name varchar(10));
+Query OK, 0 rows affected (0.94 sec)
+
+mysql> desc student;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| id    | int         | NO   | PRI | NULL    |       |
+| name  | varchar(10) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.13 sec)
+
+mysql> create user root1 identified by 'root';
+Query OK, 0 rows affected (0.19 sec)
+
+mysql> grant select,insert on student to root1;
+Query OK, 0 rows affected (0.18 sec)
+
+mysql> quit
+Bye
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin> mysql -u root1 -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> insert into student (id, name) values (1,'A'), (2, 'B'), (3,'C');
+ERROR 1046 (3D000): No database selected
+mysql> use college;
+Database changed
+mysql> insert into student (id, name) values (1,'A'), (2, 'B'), (3,'C');
+Query OK, 3 rows affected (0.23 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from student;
++----+------+
+| id | name |
++----+------+
+|  1 | A    |
+|  2 | B    |
+|  3 | C    |
++----+------+
+3 rows in set (0.00 sec)
+
+mysql> update student set name='D' where id=1;
+ERROR 1142 (42000): UPDATE command denied to user 'root1'@'localhost' for table 'student'
+mysql> quit
+Bye
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use college;
+Database changed
+mysql> grant update, delete on student to root1;
+Query OK, 0 rows affected (0.17 sec)
+
+mysql> quit
+Bye
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root1 -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 14
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use college;
+Database changed
+mysql> select * from student;
++----+------+
+| id | name |
++----+------+
+|  1 | A    |
+|  2 | B    |
+|  3 | C    |
++----+------+
+3 rows in set (0.13 sec)
+
+mysql> update student set name='D' where id=1;
+Query OK, 1 row affected (0.16 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from student;
++----+------+
+| id | name |
++----+------+
+|  1 | D    |
+|  2 | B    |
+|  3 | C    |
++----+------+
+3 rows in set (0.00 sec)
+
+mysql> quit
+Bye
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 15
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use college;
+Database changed
+mysql> revoke delete on student to root1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'to root1' at line 1
+mysql> revoke delete on student from root1;
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> quit
+Bye
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root1 -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 16
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use college;
+Database changed
+mysql> select * from student;
++----+------+
+| id | name |
++----+------+
+|  1 | D    |
+|  2 | B    |
+|  3 | C    |
++----+------+
+3 rows in set (0.11 sec)
+
+mysql> insert into student (id, name) values (5,'E');
+Query OK, 1 row affected (0.14 sec)
+
+mysql> select * from student;
++----+------+
+| id | name |
++----+------+
+|  1 | D    |
+|  2 | B    |
+|  3 | C    |
+|  5 | E    |
++----+------+
+4 rows in set (0.00 sec)
+
+mysql> delete from student where id='1';
+ERROR 1142 (42000): DELETE command denied to user 'root1'@'localhost' for table 'student'
+mysql> select user from mysql.user;
+ERROR 1142 (42000): SELECT command denied to user 'root1'@'localhost' for table 'user'
+mysql> quit
+Bye
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 17
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> select user from mysql.user
+    -> ;
++------------------+
+| user             |
++------------------+
+| root1            |
+| mysql.infoschema |
+| mysql.session    |
+| mysql.sys        |
+| root             |
++------------------+
+5 rows in set (0.03 sec)
+
+mysql>

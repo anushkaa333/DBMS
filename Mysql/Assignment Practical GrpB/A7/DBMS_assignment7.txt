@@ -1,0 +1,534 @@
+Assignment no 8 
+Name : Harshita A Girniwale
+Roll no : 35020
+Group : B
+Batch : A
+TITLE : To write PL/SQL cursor block
+Problem Statement : Write PL/SQL block to implement all types of cursor 
+
+Implicite cursor : When we execute DML statement like DELETE , INSERT ,UPDATE AND SELECT statement, implicite statements are created to process these statements.
+		   Oracle provides few attributes called as "implicite cursor attribute" to check the stattus of DML operations. The cursor attributes avalable are %FOUND,
+		   %NOTFOUND ,%ROWCOUNT ,%ISOPEN
+
+EXAMPLE : declare var_row_number(5) ;
+	  begin
+           update employee
+	   set salary=salary+1000;
+	   if SQL%NOTFOUND THEN
+	   dbms_ouput.put_line('none of salaries are updates');
+           else if SQL%FOUND THEN'
+           var_row:= SQL%ROWCOUNT
+	   dbms_ouput.put_line('salaries for '|| var_row || 'employee are  are updated');
+           end if;
+	   end;
+
+Explicite cursor : They are created when we are executing a SELECT statement that return more than one row
+		   Even though cursor stores multiple records, only one record can be processed at a time , which is called current row.
+		  When we fetch row, current row possition move to next row. 
+
+EXAMPLES:
+
+1) 
+1.Problem statement : Declare cursor without continue handler for displaying name and credits of student
+2.Creation of procedure
+mysql> create procedure c1()
+    -> begin
+    -> declare i int;
+    -> declare n varchar(20);
+    -> declare cursor1 cursor for select tot_cred,name from student;
+    -> open cursor1;
+    -> fetch cursor1 into i,n;
+    -> select i,n;
+    -> close cursor1;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (2.91 sec)
+3.Output
+mysql> call c1();
+    -> $$
++------+---------+
+| i    | n       |
++------+---------+
+|    8 | Aashish |
++------+---------+
+1 row in set (1.10 sec)
+
+Query OK, 0 rows affected (1.14 sec)
+
+2)
+1.Problem statement : Declare cursor with continue handler for displaying name and credits of student
+2.creation of procedure
+mysql> create procedure c2()
+    -> begin
+    -> declare done int default 0;
+    -> declare i int;
+    -> declare n varchar(10);
+    -> declare cursor2 cursor for select tot_cred,name from student;
+    -> declare continue handler for not found set done=1;
+    -> open cursor2;
+    -> loop1 : loop fetch cursor2 into i,n;
+    -> if done then leave loop1;
+    -> end if;
+    -> select i,n;
+    -> end loop;
+    -> close cursor2;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.25 sec)
+3.output
+mysql> call c2();
+    -> $$
++------+---------+
+| i    | n       |
++------+---------+
+|    8 | Aashish |
++------+---------+
+1 row in set (0.03 sec)
+
++------+--------+
+| i    | n      |
++------+--------+
+|    9 | Rakesh |
++------+--------+
+1 row in set (0.04 sec)
+
++------+--------+
+| i    | n      |
++------+--------+
+|    9 | chetan |
++------+--------+
+1 row in set (0.08 sec)
+
++------+--------+
+| i    | n      |
++------+--------+
+|    9 | Mayuri |
++------+--------+
+1 row in set (0.14 sec)
+
++------+-------+
+| i    | n     |
++------+-------+
+|    7 | Priya |
++------+-------+
+1 row in set (0.18 sec)
+
++------+-------+
+| i    | n     |
++------+-------+
+|    6 | Tanvi |
++------+-------+
+1 row in set (0.23 sec)
+
++------+---------+
+| i    | n       |
++------+---------+
+|    9 | Anushka |
++------+---------+
+1 row in set (0.28 sec)
+
+Query OK, 0 rows affected (0.33 sec)
+
+3)
+1. Problem statement:Declare cursor to calculate grade of student
+2. creation of procedure
+mysql> create procedure c3()
+    -> begin
+    -> declare done int default 0;
+    -> declare credit int;
+    -> declare cursor3 cursor for select tot_cred from student;
+    -> declare continue handler for not found set done=1;
+    -> open cursor3;
+    -> loop1 : loop fetch cursor3 into credit;
+    -> if(credit>=9) then
+    -> select ('distinction');
+    -> else if(credit>=8) then
+    -> select ('first class');
+    -> else if (credit>=7) then
+    -> select ('passed');
+    -> else
+    -> select ('failed');
+    -> end if;
+    -> end if;
+    -> end if;
+    -> if done then leave loop1 ;
+    -> end if;
+    -> select credit;
+    -> end loop;
+    -> close cursor3;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.45 sec)
+3.outut
+mysql> call c3();
+    -> $$
++-------------+
+| first class |
++-------------+
+| first class |
++-------------+
+1 row in set (0.10 sec)
+
++--------+
+| credit |
++--------+
+|      8 |
++--------+
+1 row in set (0.15 sec)
+
++-------------+
+| distinction |
++-------------+
+| distinction |
++-------------+
+1 row in set (0.23 sec)
+
++--------+
+| credit |
++--------+
+|      9 |
++--------+
+1 row in set (0.29 sec)
+
++-------------+
+| distinction |
++-------------+
+| distinction |
++-------------+
+1 row in set (0.37 sec)
+
++--------+
+| credit |
++--------+
+|      9 |
++--------+
+1 row in set (0.47 sec)
+
++-------------+
+| distinction |
++-------------+
+| distinction |
++-------------+
+1 row in set (0.52 sec)
+
++--------+
+| credit |
++--------+
+|      9 |
++--------+
+1 row in set (0.58 sec)
+
++--------+
+| passed |
++--------+
+| passed |
++--------+
+1 row in set (0.65 sec)
+
++--------+
+| credit |
++--------+
+|      7 |
++--------+
+1 row in set (0.73 sec)
+
++--------+
+| failed |
++--------+
+| failed |
++--------+
+1 row in set (0.83 sec)
+
++--------+
+| credit |
++--------+
+|      6 |
++--------+
+1 row in set (0.96 sec)
+
++-------------+
+| distinction |
++-------------+
+| distinction |
++-------------+
+1 row in set (1.00 sec)
+
++--------+
+| credit |
++--------+
+|      9 |
++--------+
+1 row in set (1.08 sec)
+
+Query OK, 0 rows affected (1.25 sec)
+
+4)
+1.Problem statement: Declare cursor without handler for displaying no of rooms in the classroom
+2.creation of procedure
+mysql> create procedure c4()
+    -> begin
+    -> declare total int;
+    -> declare cursor4 cursor for select count(*) from classroom;
+    -> open cursor4;
+    -> fetch cursor4 into total;
+    -> select total;
+    -> close cursor4;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.26 sec)
+3.output
+mysql> call c4();
+    -> $$
++-------+
+| total |
++-------+
+|     5 |
++-------+
+1 row in set (0.28 sec)
+
+Query OK, 0 rows affected (0.29 sec)
+
+5)
+1.problem statement : declare cursor with continue handler for displaying time slot details
+2.creation of procedure
+mysql> create procedure c5()
+    -> begin
+    -> declare done int default 0;
+    -> declare tid varchar(10);
+    -> declare stime varchar(10);
+    -> declare etime varchar(10);
+    -> declare cursor5 cursor for select time_slot_id,start_time,end_time from time_slot;
+    -> declare continue handler for not found set done=1;
+    -> open cursor5;
+    -> loop1 : loop fetch cursor5 into tid,stime,etime;
+    -> if done then leave loop1;
+    -> end if;
+    -> select tid,stime,etime;
+    -> end loop;
+    -> close cursor5;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.51 sec)
+3.output
+mysql> call c5();
+    -> $$
++------+----------+----------+
+| tid  | stime    | etime    |
++------+----------+----------+
+| t1   | 09:00:00 | 02:00:00 |
++------+----------+----------+
+1 row in set (0.00 sec)
+
++------+----------+----------+
+| tid  | stime    | etime    |
++------+----------+----------+
+| t2   | 10:00:00 | 03:00:00 |
++------+----------+----------+
+1 row in set (0.04 sec)
+
++------+----------+----------+
+| tid  | stime    | etime    |
++------+----------+----------+
+| t3   | 09:00:00 | 02:00:00 |
++------+----------+----------+
+1 row in set (0.11 sec)
+
++------+----------+----------+
+| tid  | stime    | etime    |
++------+----------+----------+
+| t4   | 08:00:00 | 10:00:00 |
++------+----------+----------+
+1 row in set (0.20 sec)
+
++------+----------+----------+
+| tid  | stime    | etime    |
++------+----------+----------+
+| t5   | 07:00:00 | 09:00:00 |
++------+----------+----------+
+1 row in set (0.31 sec)
+
+Query OK, 0 rows affected (0.43 sec)
+
+6)
+1.Problem statement : declare cursor with continue handler to display course id and its credits
+2.creation of procedure
+mysql> create procedure c6()
+    -> begin
+    -> declare done int default 0;
+    -> declare cid varchar(10);
+    -> declare credit int;
+    -> declare cursor6 cursor for select course_id,credits from course;
+    -> declare continue handler for not found set done=1;
+    -> open cursor6;
+    -> loop1 :loop fetch cursor6 into cid,credit;
+    -> if done then leave loop1;
+    -> end if;
+    -> select cid,credit;
+    -> end loop;
+    -> close cursor6;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.16 sec)
+3.output
+mysql> call c6();
+    -> $$
++-------+--------+
+| cid   | credit |
++-------+--------+
+| Bio-1 |      4 |
++-------+--------+
+1 row in set (0.00 sec)
+
++-------+--------+
+| cid   | credit |
++-------+--------+
+| Bio-2 |      3 |
++-------+--------+
+1 row in set (0.05 sec)
+
++------+--------+
+| cid  | credit |
++------+--------+
+| CS-1 |      3 |
++------+--------+
+1 row in set (0.15 sec)
+
++------+--------+
+| cid  | credit |
++------+--------+
+| CS-2 |      4 |
++------+--------+
+1 row in set (0.23 sec)
+
++-------+--------+
+| cid   | credit |
++-------+--------+
+| His-1 |      4 |
++-------+--------+
+1 row in set (0.33 sec)
+
++------+--------+
+| cid  | credit |
++------+--------+
+| Mu-1 |      3 |
++------+--------+
+1 row in set (0.45 sec)
+
++------+--------+
+| cid  | credit |
++------+--------+
+| Mu-2 |      4 |
++------+--------+
+1 row in set (0.57 sec)
+
++-------+--------+
+| cid   | credit |
++-------+--------+
+| Phy-2 |      4 |
++-------+--------+
+1 row in set (0.68 sec)
+
+Query OK, 0 rows affected (0.80 sec)
+
+7)
+1.problem statement : Declare cursor with contiue handler to display the level of instructor wheather platinum,gold or silver 
+2.creation of procedure
+mysql> create procedure c7()
+    -> begin
+    -> declare done int default 0;
+    -> declare sal int;
+    -> declare cursor7 cursor for select salary from instructor;
+    -> declare continue handler for not found set done=1;
+    -> open cursor7;
+    -> loop1 : loop fetch cursor7 into sal;
+    -> if(sal>=100000) then
+    -> select('platinum');
+    -> else if(sal>=50000) then
+    -> select('gold');
+    -> else
+    -> select('silver');
+    -> end if;
+    -> end if;
+    -> if done then leave loop1;
+    -> end if;
+    -> end loop;
+    -> close cursor7;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.26 sec)
+3.output
+mysql> call c7();
+    -> $$
++------+
+| gold |
++------+
+| gold |
++------+
+1 row in set (0.00 sec)
+
++----------+
+| platinum |
++----------+
+| platinum |
++----------+
+1 row in set (0.04 sec)
+
++----------+
+| platinum |
++----------+
+| platinum |
++----------+
+1 row in set (0.11 sec)
+
++------+
+| gold |
++------+
+| gold |
++------+
+1 row in set (0.19 sec)
+
++----------+
+| platinum |
++----------+
+| platinum |
++----------+
+1 row in set (0.31 sec)
+
++----------+
+| platinum |
++----------+
+| platinum |
++----------+
+1 row in set (0.39 sec)
+
++------+
+| gold |
++------+
+| gold |
++------+
+1 row in set (0.49 sec)
+
++--------+
+| silver |
++--------+
+| silver |
++--------+
+1 row in set (0.61 sec)
+
++--------+
+| silver |
++--------+
+| silver |
++--------+
+1 row in set (0.73 sec)
+
++--------+
+| silver |
++--------+
+| silver |
++--------+
+1 row in set (0.84 sec)
+
+Query OK, 0 rows affected (0.96 sec)
+
+Conclusion : By this we studied the PL/SQL cursor block with and without handler.

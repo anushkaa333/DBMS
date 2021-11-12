@@ -1,0 +1,58 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 23
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use university;
+Database changed
+mysql> insert into employee(e_id, e_name, e_sal) values (200, 'mn', 2000);
+ERROR 1054 (42S22): Unknown column 'e_sal' in 'field list'
+mysql> insert into employee(e_id, e_name, e_salary) values (200, 'mn', 2000);
+Query OK, 1 row affected (0.20 sec)
+
+mysql> insert into employee(e_id, e_name, e_salary) values (500, 'jk', 5000);
+Query OK, 1 row affected (0.17 sec)
+
+mysql> select * from employee;
++------+--------+----------+
+| e_id | e_name | e_salary |
++------+--------+----------+
+|  100 | MH     |    10000 |
+|  300 | mm     |     3000 |
+|  200 | mn     |     2000 |
+|  500 | jk     |     5000 |
++------+--------+----------+
+4 rows in set (0.00 sec)
+
+mysql> delimiter //
+mysql> create procedure p3(out lowsal int, out highsal int, out avgsal int)
+    -> begin
+    -> select min(e_salary) into lowsal from employee;
+    -> select max(e_salary) into highsal from employee;
+    -> select avg(e_salary) into avgsal from employee;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> call p3(@lowsal, @highsal, @avgsal);
+    -> //
+Query OK, 1 row affected (0.11 sec)
+
+mysql> select @lowsal, @highsal, @avgsal;
+    -> //
++---------+----------+---------+
+| @lowsal | @highsal | @avgsal |
++---------+----------+---------+
+|    2000 |    10000 |    5000 |
++---------+----------+---------+
+1 row in set (0.00 sec)
+
+mysql>

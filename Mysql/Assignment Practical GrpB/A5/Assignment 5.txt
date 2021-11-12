@@ -1,0 +1,188 @@
+Assignment No. 5
+Name: Anushka M Mulay
+Roll No:35040
+Group: B
+Batch: B
+Title: Trigger
+
+// After Insert
+Query:
+mysql> create trigger emp_after_insert after insert on emp for each row begin insert into emp_audit values (new.id, new.salary*14);
+    -> end //
+Query OK, 0 rows affected (0.23 sec)
+
+mysql> insert into emp values(1, 'Ram', 10000);
+    -> //
+Query OK, 1 row affected (0.18 sec)
+
+mysql> insert into emp values(2, 'Sham', 10000);//
+Query OK, 1 row affected (0.42 sec)
+
+mysql> insert into emp values(3, 'Geeta', 10000);//
+Query OK, 1 row affected (0.12 sec)
+
+mysql> insert into emp values(4, 'Seeta', 9000);//
+Query OK, 1 row affected (0.52 sec)
+
+mysql> insert into emp values(5, 'Meena', 5000);//
+Query OK, 1 row affected (0.10 sec)
+
+Output:
+mysql> select * from emp;
+    -> //
++------+-------+--------+
+| id   | name  | salary |
++------+-------+--------+
+|    1 | Ram   |  10000 |
+|    2 | Sham  |  10000 |
+|    3 | Geeta |  10000 |
+|    4 | Seeta |   9000 |
+|    5 | Meena |   5000 |
++------+-------+--------+
+5 rows in set (0.01 sec)
+
+mysql> select * from emp_audit;//
++------+--------+
+| id   | ctc    |
++------+--------+
+|    1 | 140000 |
+|    2 | 140000 |
+|    3 | 140000 |
+|    4 | 126000 |
+|    5 |  70000 |
++------+--------+
+5 rows in set (0.01 sec)
+
+
+//After Update
+Query:
+mysql> create trigger after_update_emp after update on emp for each row begin update emp_audit set ctc=new.salary*12 where id=old.id; end//
+Query OK, 0 rows affected (0.27 sec)
+
+mysql> update emp set salary=3000 where id=3;//
+Query OK, 1 row affected (0.14 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+Output:
+mysql> select * from emp;//
++------+-------+--------+
+| id   | name  | salary |
++------+-------+--------+
+|    1 | Ram   |  10000 |
+|    2 | Sham  |  10000 |
+|    3 | Geeta |   3000 |
+|    4 | Seeta |   9000 |
+|    5 | Meena |   5000 |
++------+-------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp_audit;
+    -> //
++------+--------+
+| id   | ctc    |
++------+--------+
+|    1 | 140000 |
+|    2 | 140000 |
+|    3 |  36000 |
+|    4 | 126000 |
+|    5 |  70000 |
++------+--------+
+5 rows in set (0.00 sec)
+
+//Before Delete
+Query:
+mysql> create trigger before_delete_emp before delete on emp for each row begin delete from emp_audit where id=old.id; end//
+Query OK, 0 rows affected (0.32 sec)
+
+mysql> delete from emp where id=3;//
+Query OK, 1 row affected (0.27 sec)
+Output:
+mysql> select * from emp;
+    -> //
++------+-------+--------+
+| id   | name  | salary |
++------+-------+--------+
+|    1 | Ram   |  10000 |
+|    2 | Sham  |  10000 |
+|    4 | Seeta |   9000 |
+|    5 | Meena |   5000 |
++------+-------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select * from emp_audit;//
++------+--------+
+| id   | ctc    |
++------+--------+
+|    1 | 140000 |
+|    2 | 140000 |
+|    4 | 126000 |
+|    5 |  70000 |
++------+--------+
+4 rows in set (0.00 sec)
+
+// Before Insert
+Query:
+mysql> create trigger before_insert before insert on emp for each row begin declare salary numeric(5); set salary=new.salary; if salary>=70000 then set salary=salary-1000; end if; set new.salary=salary; end//
+Query OK, 0 rows affected (0.38 sec)
+
+mysql> insert into emp values(6,'Ramesh', 70000);//
+Query OK, 1 row affected (0.23 sec)
+Output:
+mysql> select * from emp;//
++------+--------+--------+
+| id   | name   | salary |
++------+--------+--------+
+|    1 | Ram    |  10000 |
+|    2 | Sham   |  10000 |
+|    4 | Seeta  |   9000 |
+|    5 | Meena  |   5000 |
+|    6 | Ramesh |  69000 |
++------+--------+--------+
+5 rows in set (0.00 sec)
+
+//Before Update
+Query:
+mysql> create trigger before_update before update on emp for each row begin update emp_audit set ctc=new.salary*2 where id=old.id; end//
+Query OK, 0 rows affected (0.50 sec)
+Output:
+mysql> select * from emp_audit;
++------+--------+
+| id   | ctc    |
++------+--------+
+|    1 | 140000 |
+|    2 | 140000 |
+|    4 | 126000 |
+|    6 | 966000 |
++------+--------+
+4 rows in set (0.20 sec)
+
+
+// After Delete
+Query:
+mysql> create trigger after_delete after delete on emp for each row begin delete from emp_audit where id=old.id; end //
+Query OK, 0 rows affected (1.30 sec)
+
+mysql> delete from emp where id=4;
+    -> //
+Query OK, 1 row affected (0.18 sec)
+Output:
+mysql> select * from emp;
+    -> //
++------+--------+--------+
+| id   | name   | salary |
++------+--------+--------+
+|    1 | Ram    |  10000 |
+|    2 | Sham   |  10000 |
+|    6 | Ramesh |  69000 |
++------+--------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from emp_audit;
+    -> //
++------+--------+
+| id   | ctc    |
++------+--------+
+|    1 | 140000 |
+|    2 | 140000 |
+|    6 | 966000 |
++------+--------+
+3 rows in set (0.00 sec)

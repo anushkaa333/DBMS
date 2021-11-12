@@ -1,0 +1,155 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use university;
+Database changed
+mysql> delimiter //
+mysql> create procedure cursor1()
+    -> begin
+    -> declare done int default 0;
+    -> declare i int;
+    -> declare n varchar(10);
+    -> declare cursor1 cursor for select tot_credits, sname from student;
+    -> declare continue handler for not found set done=1;
+    -> open cursor1;
+    -> loop1 : loop fetch cursor1 into i,n;
+    -> if done then leave loop1;
+    -> end if;
+    -> select i,n;
+    -> end loop;
+    -> close cursor1;
+    -> end;//
+Query OK, 0 rows affected (0.33 sec)
+
+mysql> delimiter;
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delimiter' at line 1
+mysql> delimiter //
+mysql> call cursor1();
+    -> end;
+    ->
+    ->
+    ->
+    -> ;
+    -> //
++------+------+
+| i    | n    |
++------+------+
+|    8 | A    |
++------+------+
+1 row in set (0.21 sec)
+
++------+------+
+| i    | n    |
++------+------+
+|    9 | B    |
++------+------+
+1 row in set (0.22 sec)
+
++------+------+
+| i    | n    |
++------+------+
+|    9 | C    |
++------+------+
+1 row in set (0.24 sec)
+
++------+------+
+| i    | n    |
++------+------+
+|    9 | D    |
++------+------+
+1 row in set (0.25 sec)
+
++------+------+
+| i    | n    |
++------+------+
+|    7 | E    |
++------+------+
+1 row in set (0.26 sec)
+
++------+------+
+| i    | n    |
++------+------+
+|    6 | F    |
++------+------+
+1 row in set (0.27 sec)
+
++------+------+
+| i    | n    |
++------+------+
+|    9 | G    |
++------+------+
+1 row in set (0.28 sec)
+
+Query OK, 0 rows affected (0.29 sec)
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'end' at line 1
+mysql> delimiter;
+    -> call cursor1();
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delimiter;call cursor1()' at line 1
+mysql> delimiter //
+mysql> call cursor1();
+    -> //
++------+------+
+| i    | n    |
++------+------+
+|    8 | A    |
++------+------+
+1 row in set (0.00 sec)
+
++------+------+
+| i    | n    |
++------+------+
+|    9 | B    |
++------+------+
+1 row in set (0.01 sec)
+
++------+------+
+| i    | n    |
++------+------+
+|    9 | C    |
++------+------+
+1 row in set (0.03 sec)
+
++------+------+
+| i    | n    |
++------+------+
+|    9 | D    |
++------+------+
+1 row in set (0.04 sec)
+
++------+------+
+| i    | n    |
++------+------+
+|    7 | E    |
++------+------+
+1 row in set (0.05 sec)
+
++------+------+
+| i    | n    |
++------+------+
+|    6 | F    |
++------+------+
+1 row in set (0.06 sec)
+
++------+------+
+| i    | n    |
++------+------+
+|    9 | G    |
++------+------+
+1 row in set (0.07 sec)
+
+Query OK, 0 rows affected (0.08 sec)
+
+mysql>

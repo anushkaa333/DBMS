@@ -1,0 +1,118 @@
+ASSIGNMENT NO 1
+
+NAME: Anushka M Mulay
+ROLL NO: 35040
+BATCH :B
+CLASS : TE(IT)-A
+GROUP : C
+TITLE : Implement Map reduce example with suitable example.
+
+---------------------------------------------------------------------------------
+
+> db.createCollection("loan");
+{ "ok" : 1 }
+> db.loan.insert({lid:1,amount:50000});
+WriteResult({ "nInserted" : 1 })
+> db.loan.insert({lid:2,amount:100000});
+WriteResult({ "nInserted" : 1 })
+> db.loan.insert({lid:3,amount:60000});
+WriteResult({ "nInserted" : 1 })
+> db.loan.insert({lid:4,amount:300000});
+WriteResult({ "nInserted" : 1 })
+
+EXAMPLE 1: 
+> var mapfunc1=function(){
+... emit(this.lid,this.amount);
+... };
+> var reducefunc1=function(keylid,valuesamount){return Array.sum(valuesamount);};
+
+> db.loan.mapReduce(
+... mapfunc1,
+... reducefunc1,
+... {out:"map_example"}
+... )
+{ "result" : "map_example", "ok" : 1 }
+> db.mao_example.find();
+> db.map_example.find();
+{ "_id" : 4, "value" : 300000 }
+{ "_id" : 1, "value" : 50000 }
+{ "_id" : 2, "value" : 100000 }
+{ "_id" : 3, "value" : 60000 }
+
+EXAMPLE 2:
+> db.loan.insert({lid:11,amount:100,status:"Approved"});
+WriteResult({ "nInserted" : 1 })
+> db.loan.insert({lid:11,amount:200,status:"Approved"});
+WriteResult({ "nInserted" : 1 })
+> db.loan.insert({lid:12,amount:300,status:"Approved"});
+WriteResult({ "nInserted" : 1 })
+> db.loan.insert({lid:12,amount:400,status:"not_Approved"});
+WriteResult({ "nInserted" : 1 })
+> db.loan.insert({lid:13,amount:500,status:"not_Approved"});
+WriteResult({ "nInserted" : 1 })
+> db.loan.find().pretty();
+{
+        "_id" : ObjectId("5fba8548deb29af76d609d19"),
+        "lid" : 1,
+        "amount" : 50000
+}
+{
+        "_id" : ObjectId("5fba855edeb29af76d609d1a"),
+        "lid" : 2,
+        "amount" : 100000
+}
+{
+        "_id" : ObjectId("5fba856edeb29af76d609d1b"),
+        "lid" : 3,
+        "amount" : 60000
+}
+{
+        "_id" : ObjectId("5fba8581deb29af76d609d1c"),
+        "lid" : 4,
+        "amount" : 300000
+}
+{
+        "_id" : ObjectId("5fba8980deb29af76d609d1d"),
+        "lid" : 11,
+        "amount" : 100,
+        "status" : "Approved"
+}
+{
+        "_id" : ObjectId("5fba898bdeb29af76d609d1e"),
+        "lid" : 11,
+        "amount" : 200,
+        "status" : "Approved"
+}
+{
+        "_id" : ObjectId("5fba89addeb29af76d609d1f"),
+        "lid" : 12,
+        "amount" : 300,
+        "status" : "Approved"
+}
+{
+        "_id" : ObjectId("5fba89c7deb29af76d609d20"),
+        "lid" : 12,
+        "amount" : 400,
+        "status" : "not_Approved"
+}
+{
+        "_id" : ObjectId("5fba89d4deb29af76d609d21"),
+        "lid" : 13,
+        "amount" : 500,
+        "status" : "not_Approved"
+}
+
+FIND MAPREDUCE FUNCTION TO SUM THE AMOUNT WHOSE STATUS IS APPROVED
+> db.loan.mapReduce( function(){emit(this.lid,this.amount);}, function(key,values){return Array.sum(values)}, { query:{status:"Approved"}, out:"tot_loan" } )
+{ "result" : "tot_loan", "ok" : 1 }
+> db.tot_loan.find();
+{ "_id" : 11, "value" : 300 }
+{ "_id" : 12, "value" : 300 }
+
+FIND MAPREDUCE FUNCTION TO SUM THE AMOUNT WHOSE STATUS IS NOT APPROVED
+> db.loan.mapReduce( function(){emit(this.lid,this.amount);}, function(key,values){return Array.sum(values)}, { query:{status:"not_Approved"}, out:"tot_loan" } )
+{ "result" : "tot_loan", "ok" : 1 }
+> db.tot_loan.find();
+{ "_id" : 13, "value" : 500 }
+{ "_id" : 12, "value" : 400 }
+>

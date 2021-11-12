@@ -1,0 +1,302 @@
+ASSIGNMENT NO 3
+
+NAME: Anushka M Mulay
+ROLL NO: 35040
+BATCH : B
+CLASS : TE(IT)-A
+GROUP : C
+TITLE : Execute at least 10 queries on any suitable MongoDB database that
+demonstrates following:
+1. $ where queries
+2. Cursors (Limits, skips, sorts, advanced query options)
+3. Database commands
+
+-------------------------------------------------------------------------------------------------
+> use bank;
+switched to db bank
+
+Q1. Display the first three documents
+> db.staff.find().pretty().limit(3);
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("5fba8f44c004f110dd3adbd3"),
+        "eid" : 200,
+        "ename" : "RTY",
+        "salary" : 50000,
+        "Email" : null
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000,
+        "Email" : null
+}
+
+Q2. Display the documents in descending order
+> db.staff.find().pretty().sort({eid:-1});
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba8f44c004f110dd3adbd3"),
+        "eid" : 200,
+        "ename" : "RTY",
+        "salary" : 50000,
+        "Email" : null
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000,
+        "Email" : null
+}
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+
+Q3. Display the last three documents in descending order
+> db.staff.find().pretty().limit(3).sort({eid:-1});
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000,
+        "Email" : null
+}
+
+Q4. Skip first three documents and display the remaining documents
+> db.staff.find().pretty().skip(3);
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+Q5. Skip first two documents and display remaining three
+> db.staff.find().pretty().limit(3).skip(2);
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000,
+        "Email" : null
+}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+Q6. Display the names of all staff using cursor
+> var cursor1=db.staff.find()
+> cursor1.forEach(function(x){print(x.ename);});
+QWE
+RTY
+[object BSON]
+DFG
+HJK
+
+Q7.Display the document whose eid is greaater than 200 using cursor
+> var data=db.staff.find({eid:{$gt:200}});
+> while(data.hasNext()) {print(tojson(data.next()));}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+Q8.Display three documents of staff after skipping first two using cursor
+> var info= db.staff.find().limit(3).skip(2)
+> while(info.hasNext()) {print(tojson(info.next()))};
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000,
+        "Email" : null
+}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+Q9.Sort the record of four staff after skipping first record using cursor
+> var info1= db.staff.find().limit(4).skip(1)
+> while(info1.hasNext()) {print(tojson(info1.next()))};
+{
+        "_id" : ObjectId("5fba8f44c004f110dd3adbd3"),
+        "eid" : 200,
+        "ename" : "RTY",
+        "salary" : 50000,
+        "Email" : null
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000,
+        "Email" : null
+}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+Q10.Find the orders whose price and total is same using where
+> db.order.find({"$where":function()
+... {for(var price in this)
+... {for(var total in this)
+... {if(price!=total && this[price]==this[total])
+... {return true;}
+... }
+... }
+... return false;
+... }
+... }).pretty()
+{
+        "_id" : ObjectId("5fc12dab19caa99e9930f90b"),
+        "cust_id" : 1,
+        "product" : "book",
+        "price" : 300,
+        "status" : "Approved",
+        "total" : 300
+}
+{
+        "_id" : ObjectId("5fc12e0a19caa99e9930f90d"),
+        "cust_id" : 3,
+        "product" : "notebook",
+        "price" : 30,
+        "status" : "Approved",
+        "total" : 30
+}
+{
+        "_id" : ObjectId("5fc12f1a19caa99e9930f911"),
+        "cust_id" : 5,
+        "product" : "pencil",
+        "price" : 5,
+        "status" : "not_Approved",
+        "total" : 5
+}
+{
+        "_id" : ObjectId("5fc12f3719caa99e9930f912"),
+        "cust_id" : 6,
+        "product" : "cup",
+        "price" : 50,
+        "status" : "Approved",
+        "total" : 50
+}
+
+Q11.Find the orders whose price and total is not same using where
+> db.order.find({"$where":function() 
+...{for(var price in this) 
+...{for(var total in this) 
+...{if(price!=total && this[price]==this[total]) 
+...{return false;}
+...}
+...} 
+...return true;
+...}
+...}).pretty()
+{
+        "_id" : ObjectId("5fc12dd519caa99e9930f90c"),
+        "cust_id" : 2,
+        "product" : "computer",
+        "price" : 30000,
+        "status" : "not_Approved",
+        "total" : 40000
+}
+{
+        "_id" : ObjectId("5fc12efc19caa99e9930f910"),
+        "cust_id" : 4,
+        "product" : "pen",
+        "price" : 10,
+        "status" : "Approved",
+        "total" : 100
+}
+>

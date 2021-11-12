@@ -1,0 +1,582 @@
+﻿/*
+        GROUP : B
+        NAME:  Anushka M Mulay      
+        ROLL NO: 35040
+        BATCH: B
+        CLASS:   TE(IT)-A
+        STATEMENT: 6.Write and execute PL/SQL stored procedure and function to perform 
+		a suitable task on the database. Demonstrate its use.
+        */
+       
+        //PROCEDURES ( atleast 6 to 7)
+	1. Problem Statement
+	2. Creation of procedure
+	3. Output
+
+        //FUNCTIONs ( atleast 6 to 7)
+	1. Problem Statement
+	2. Creation of procedure
+	3. Output
+
+        /*
+    
+
+
+
+
+//Procedure
+
+
+
+
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 19
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use university;
+Database changed
+
+*****1) Write procedure for students to display all records from student*****
+
+
+mysql> delimiter //
+mysql> create procedure p1()
+    -> begin
+    -> select * from student;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.24 sec)
+
+mysql> delimiter //
+mysql> call p1();
+    -> //
++-----+-------+-------------+-----------+
+| sid | sname | tot_credits | dept_name |
++-----+-------+-------------+-----------+
+| s1  | A     |           8 | Music     |
+| s2  | B     |           9 | Computer  |
+| s3  | C     |           9 | Music     |
+| s4  | D     |           9 | Physics   |
+| s5  | E     |           7 | Biology   |
+| s6  | F     |           6 | Computer  |
+| s7  | G     |           9 | History   |
++-----+-------+-------------+-----------+
+7 rows in set (0.02 sec)
+
+Query OK, 0 rows affected (0.05 sec)
+
+mysql>
+
+
+*****2) Write a procedure to add new employee into emp table*****
+
+
+
+mysql> create table employee (e_id int, e_name varchar(10), e_salary int);
+Query OK, 0 rows affected (0.83 sec)
+
+mysql> insert into employee(e_id, e_name, e_salary) values (100, 'MH', 10000);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> desc employee;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| e_id     | int         | YES  |     | NULL    |       |
+| e_name   | varchar(10) | YES  |     | NULL    |       |
+| e_salary | int         | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.04 sec)
+
+mysql> select * from employee;
++------+--------+----------+
+| e_id | e_name | e_salary |
++------+--------+----------+
+|  100 | MH     |    10000 |
++------+--------+----------+
+1 row in set (0.10 sec)
+
+
+mysql> delimiter //
+mysql> create procedure p2(in eid int, in ename varchar(10), in esal int)
+    -> begin
+    -> insert into employee(e_id, e_name, e_salary) values (eid, ename, esal);
+    -> end; //
+Query OK, 0 rows affected (0.23 sec)
+
+mysql> call p2(300, 'mm', 3000);
+    -> //
+Query OK, 1 row affected (0.09 sec)
+
+mysql> select * from employee;
+    -> //
++------+--------+----------+
+| e_id | e_name | e_salary |
++------+--------+----------+
+|  100 | MH     |    10000 |
+|  300 | mm     |     3000 |
++------+--------+----------+
+2 rows in set (0.00 sec)
+
+mysql>
+
+
+
+*****3)Find out min, max, avg salary of instructor using procedure*****
+
+mysql> insert into employee(e_id, e_name, e_salary) values (200, 'mn', 2000);
+Query OK, 1 row affected (0.20 sec)
+
+mysql> insert into employee(e_id, e_name, e_salary) values (500, 'jk', 5000);
+Query OK, 1 row affected (0.17 sec)
+
+mysql> select * from employee;
++------+--------+----------+
+| e_id | e_name | e_salary |
++------+--------+----------+
+|  100 | MH     |    10000 |
+|  300 | mm     |     3000 |
+|  200 | mn     |     2000 |
+|  500 | jk     |     5000 |
++------+--------+----------+
+4 rows in set (0.00 sec)
+
+mysql> delimiter //
+mysql> create procedure p3(out lowsal int, out highsal int, out avgsal int)
+    -> begin
+    -> select min(e_salary) into lowsal from employee;
+    -> select max(e_salary) into highsal from employee;
+    -> select avg(e_salary) into avgsal from employee;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> call p3(@lowsal, @highsal, @avgsal);
+    -> //
+Query OK, 1 row affected (0.11 sec)
+
+mysql> select @lowsal, @highsal, @avgsal;
+    -> //
++---------+----------+---------+
+| @lowsal | @highsal | @avgsal |
++---------+----------+---------+
+|    2000 |    10000 |    5000 |
++---------+----------+---------+
+1 row in set (0.00 sec)
+
+mysql>
+
+
+*****4)Perform addition using procedure*****
+
+
+mysql> use university;
+Database changed
+mysql> delimiter //
+mysql> create procedure p4(a int, b int, out c int)
+    -> begin
+    -> select (a+b) into c;
+    -> end; //
+Query OK, 0 rows affected (0.35 sec)
+
+mysql> call p4(5,5,@c);
+    -> //
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @c;
+    -> //
++------+
+| @c   |
++------+
+|   10 |
++------+
+1 row in set (0.00 sec)
+
+mysql>
+
+
+
+*****5)Find the larger number among two numbers*****
+
+mysql> delimiter //
+mysql> create procedure p5(a int, b int)
+    -> begin
+    -> if (a>b) then
+    -> select ('a is grater');
+    -> else
+    -> select ('b is greater');
+    -> end if;
+    -> end; //
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> call p5(5,6);
+    -> //
++--------------+
+| b is greater |
++--------------+
+| b is greater |
++--------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+
+
+
+*****6)Find the larger number among three numbers using nested if else*****
+
+mysql> delimiter //
+mysql> create procedure p6(a int, b int, c int)
+    -> begin
+    -> if(a>b) then
+    -> select ('a is greater');
+    -> else if(b>c) then
+    -> select ('b is greater');
+    -> else
+    -> select ('c is greater');
+    -> end if;
+    -> end if;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> call p6(3,5,6);
+    -> //
++--------------+
+| c is greater |
++--------------+
+| c is greater |
++--------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+
+
+
+*****7)Write a procedure that returns total salary of all instructor*****
+
+mysql> select sum(salary) from instructor;
++-------------+
+| sum(salary) |
++-------------+
+|      670000 |
++-------------+
+1 row in set (0.01 sec)
+mysql> delimiter //
+mysql> create procedure p8()
+    -> begin
+    -> select sum(salary) from instructor;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.24 sec)
+
+mysql> call p8();
+    -> //
++-------------+
+| sum(salary) |
++-------------+
+|      670000 |
++-------------+
+1 row in set (0.04 sec)
+
+Query OK, 0 rows affected (0.05 sec)
+
+
+
+*****8)Write a procedure that returns total salary of all instructor*****
+
+
+mysql> delimiter //
+mysql> create procedure p9(in d_name varchar(10), out total int)
+    -> begin
+    -> select sum(salary) into total from instructor where dept_name=d_name;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.24 sec)
+
+mysql> call p9('Computer', @total);
+    -> //
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @total;
+    -> //
++--------+
+| @total |
++--------+
+|  85000 |
++--------+
+1 row in set (0.00 sec)
+
+mysql>
+
+
+
+*****9)Write procedure that accepts employee no and returns the salarystatus as high, low based on his salary*****
+
+mysql> delimiter //
+mysql> create procedure psal(id int, out sal int)
+    -> begin
+    -> select salary into sal from instructor where inst_id=id;
+    -> if(sal>65000) then
+    -> select ('the status is high');
+    -> else
+    -> select ('the status is low');
+    -> end if;
+    -> end; //
+Query OK, 0 rows affected (0.23 sec)
+
+mysql> select * from instructor;
+    -> //
++---------+-----------+--------+-----------+------------+
+| inst_id | inst_name | salary | dept_name | join_date  |
++---------+-----------+--------+-----------+------------+
+|     111 | ABC       |  85000 | Computer  | 2010-10-10 |
+|     112 | PQR       | 110000 | Music     | 2010-12-16 |
+|     113 | EFG       |  90000 | Physics   | NULL       |
+|     114 | XYZ       |  80000 | History   | NULL       |
+|     115 | LMN       | 110000 | Music     | NULL       |
+|     116 | UVW       |  90000 | Physics   | NULL       |
+|     117 | HIJ       |  85000 | Biology   | NULL       |
+|     121 | Jim       |  20000 | NULL      | NULL       |
++---------+-----------+--------+-----------+------------+
+8 rows in set (0.30 sec)
+
+mysql> call psal(114, @sal);
+    -> //
++--------------------+
+| the status is high |
++--------------------+
+| the status is high |
++--------------------+
+1 row in set (0.12 sec)
+
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> call psal(121, @sal);
+    -> //
++-------------------+
+| the status is low |
++-------------------+
+| the status is low |
++-------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+
+
+
+*****10)Write procedure that accepts employee no and returns no of employee working in that department*****
+
+
+mysql> delimiter //
+mysql> create procedure p7(in d_name varchar(10), out d_count int)
+    -> begin
+    -> select count(inst_id) into d_count from instructor where dept_name=d_name;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.18 sec)
+
+mysql> call p7('Computer');
+    -> //
+ERROR 1318 (42000): Incorrect number of arguments for PROCEDURE university.p7; expected 2, got 1
+mysql> call p7('Computer', @d_count);
+    -> //
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select @d_count;
+    -> //
++----------+
+| @d_count |
++----------+
+|        1 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> call p7('Physics', @d_count);
+    -> //
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @d_count;
+    -> //
++----------+
+| @d_count |
++----------+
+|        2 |
++----------+
+1 row in set (0.00 sec)
+
+mysql>
+
+
+
+
+
+
+
+
+
+//Function
+
+
+
+
+*****1)Perform addition of 2 numbers using function*****
+
+
+mysql> Delimiter //
+mysql> Create function f1(a int, b int)
+    -> Returns int
+    -> Deterministic
+    -> Begin
+    -> Declare c int;
+    -> Set c=a+b;
+    -> Return c;
+    -> End;
+    -> //
+Query OK, 0 rows affected (0.22 sec)
+
+mysql> select f1(5,6);
+    -> //
++---------+
+| f1(5,6) |
++---------+
+|      11 |
++---------+
+1 row in set (0.00 sec)
+
+mysql>
+
+
+
+
+*****2)Write a function that returns total salary of all instructor*****
+
+
+mysql> delimiter //
+mysql> create function f4( d_name varchar(10))
+    -> returns int
+    -> deterministic
+    -> begin
+    -> declare total int;
+    -> select sum(salary) into total from instructor where dept_name=d_name;
+    -> return total;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.33 sec)
+
+mysql> select f4('Computer');
+    -> //
++----------------+
+| f4('Computer') |
++----------------+
+|          85000 |
++----------------+
+1 row in set (0.06 sec)
+
+mysql>
+
+
+*****4)Write function that accepts employee no and returns the salarystatus as high, low based on his salary*****
+
+
+mysql> delimiter //
+mysql> create function f2(iid int)
+    -> returns varchar(10)
+    -> deterministic
+    -> begin
+    -> declare sal int;
+    -> select salary into sal from instructor where inst_id=iid;
+    -> if(sal>65000) then
+    -> return 'high';
+    -> else
+    -> return 'low';
+    -> end if;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.20 sec)
+
+mysql> select f2(115);
+    -> //
++---------+
+| f2(115) |
++---------+
+| high    |
++---------+
+1 row in set (0.12 sec)
+
+mysql> select * from instructor;
+    -> //
++---------+-----------+--------+-----------+------------+
+| inst_id | inst_name | salary | dept_name | join_date  |
++---------+-----------+--------+-----------+------------+
+|     111 | ABC       |  85000 | Computer  | 2010-10-10 |
+|     112 | PQR       | 110000 | Music     | 2010-12-16 |
+|     113 | EFG       |  90000 | Physics   | NULL       |
+|     114 | XYZ       |  80000 | History   | NULL       |
+|     115 | LMN       | 110000 | Music     | NULL       |
+|     116 | UVW       |  90000 | Physics   | NULL       |
+|     117 | HIJ       |  85000 | Biology   | NULL       |
+|     121 | Jim       |  20000 | NULL      | NULL       |
++---------+-----------+--------+-----------+------------+
+8 rows in set (0.00 sec)
+
+mysql> select f2(121);
+    -> //
++---------+
+| f2(121) |
++---------+
+| low     |
++---------+
+1 row in set (0.00 sec)
+
+mysql>
+
+
+*****5)Write function that accepts employee no and returns no of employee working in that department*****
+
+
+mysql> delimiter //
+mysql> create function f3(d_name varchar(10))
+    -> returns int
+    -> deterministic
+    -> begin
+    -> declare d_count int;
+    -> select count(inst_id) into d_count from instructor where dept_name=d_name;
+    -> return d_count;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.20 sec)
+
+mysql> call f3('Music');
+    -> //
+ERROR 1305 (42000): PROCEDURE university.f3 does not exist
+mysql> select f3('Music');
+    -> //
++-------------+
+| f3('Music') |
++-------------+
+|           2 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql>
+
+
+
+Conclusion : Thus, we have﻿ executed PL/SQL stored procedure and function to perform 
+		a suitable task on the database. 
+       

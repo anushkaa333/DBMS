@@ -1,0 +1,280 @@
+Assignment 6B
+
+Name : Anushka M Mulay
+Roll_no : 35040
+Group : B
+Batch : B
+TTTLE To create PL/SQL function block
+Problem statement : Write and execute PL/SQL stored procedure and function to perform a suitable task on a database and demonstate its use 
+
+Problem Statement:1) Find out min,max and avg salary of instructor using function
+Creation of function: 
+mysql> create function f1()
+    -> returns int
+    -> deterministic
+    -> begin
+    -> declare max int;
+    -> select max(salary) into max from instructor;
+    -> return max;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (2.24 sec)
+Output:
+mysql> select f1();
+    -> $$
++--------+
+| f1()   |
++--------+
+| 120000 |
++--------+
+1 row in set (0.27 sec)
+
+Problem Statement:2) Perform addition using function
+Creation of function : 
+mysql> create function f2( a int,b int)
+    -> returns int
+    -> deterministic
+    -> begin
+    -> declare c int;
+    -> select a+b into c;
+    -> return c;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.61 sec)
+output:
+mysql> select f2(2,4);
+    -> $$
++---------+
+| f2(2,4) |
++---------+
+|       6 |
++---------+
+1 row in set (0.04 sec)
+
+Problem Statement:3) Find out larger number among two numbers
+creation of function :
+mysql> create function f3(a int, b int )
+    -> returns varchar(10)
+    -> deterministic
+    -> begin
+    -> if (a>b ) then
+    -> return 'a greater';
+    -> else
+    -> return 'b greater';
+    -> end if;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.37 sec)
+Output:
+mysql> select f3(3,4);
+    -> $$
++-----------+
+| f3(3,4)   |
++-----------+
+| b greater |
++-----------+
+1 row in set (0.02 sec)
+
+Problem Statement:4) Write function that returns the total salary of all instructor
+creation of function :
+mysql> create function f4()
+    -> returns int
+    -> deterministic
+    -> begin
+    -> declare total int;
+    -> select sum(salary) into total from instructor;
+    -> return total;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.44 sec)
+Output:
+mysql> select f4();
+    -> $$
++--------+
+| f4()   |
++--------+
+| 732000 |
++--------+
+1 row in set (0.22 sec)
+
+Problem Statement:5)Write function that returns the total salary of all instructor in computer department
+creation of function :  
+mysql> create function f5()
+    -> returns int
+    -> deterministic
+    -> begin
+    -> declare total int;
+    -> select sum(salary) into total from instructor where dept_name='computer';
+    -> return total;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.21 sec)
+Output:
+mysql> select f5();
+    -> $$
++-------+
+| f5()  |
++-------+
+| 95000 |
++-------+
+1 row in set (0.03 sec)
+
+Problem Statement:6) Write a function that accept employee no and return no of employee working in that department
+creation of function :  
+mysql> create function f6(iid varchar(10))
+    -> returns varchar(10)
+    -> deterministic
+    -> begin
+    -> declare sal int;
+    -> select salary into sal from instructor where id=iid;
+    -> if(sal>50000) then
+    -> return 'high';
+    -> else
+    -> return 'low';
+    -> end if;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.21 sec)
+Output:
+mysql> select f6(115);
+    -> $$
++---------+
+| f6(115) |
++---------+
+| high    |
++---------+
+1 row in set (0.01 sec)
+
+mysql> select f6(118);
+    -> $$
++---------+
+| f6(118) |
++---------+
+| low     |
++---------+
+1 row in set (0.00 sec)
+
+Problem Statement:7) Write function that accepts deptno and returns number of employees working in that department
+creation of function :  
+mysql> create function f7(dept varchar(10))
+    -> returns int
+    -> deterministic
+    -> begin
+    -> declare total int;
+    -> select count(*) into total from instructor where dept_name=dept;
+    -> return total;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.37 sec)
+Output :
+mysql> select f7('computer');
+    -> $$
++----------------+
+| f7('computer') |
++----------------+
+|              1 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select f7('music');
+    -> $$
++-------------+
+| f7('music') |
++-------------+
+|           3 |
++-------------+
+1 row in set (0.00 sec)
+
+Problem Statement:8) Write a function which will show the level of customer whether platinum,gold or silver and display name with level
+creation of function :  
+mysql> create function f8(iid varchar(10))
+    -> returns varchar(30)
+    -> deterministic
+    -> begin
+    -> declare sal int;
+    -> select salary into sal from instructor where id=iid;
+    -> if(sal>=100000) then
+    -> return 'level is platinum';
+    -> else if(sal>=50000) then
+    -> return 'level is gold';
+    -> else
+    -> return 'level is silver';
+    -> end if;
+    -> end if;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.28 sec)
+Output:
+mysql> select f8(112);
+    -> $$
++-------------------+
+| f8(112)           |
++-------------------+
+| level is platinum |
++-------------------+
+1 row in set (0.07 sec)
+
+mysql> select f8(111);
+    -> $$
++---------------+
+| f8(111)       |
++---------------+
+| level is gold |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select f8(118);
+    -> $$
++-----------------+
+| f8(118)         |
++-----------------+
+| level is silver |
++-----------------+
+1 row in set (0.00 sec)
+
+Problem Statement:9)Write function to display deptname of given building number
+creation of function :
+mysql> create function f9(d int)
+    -> returns varchar(20)
+    -> deterministic
+    -> begin
+    -> declare dname varchar(20);
+    -> select dept_name into dname from department where building=d;
+    -> return dname;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.79 sec)
+Output:
+mysql> select f9(2);
+    -> $$
++-------+
+| f9(2) |
++-------+
+| music |
++-------+
+1 row in set (0.07 sec)
+
+Problem Statement:10) write function to display students credit passing his id
+creation of function :
+mysql> create function f10(stud_id varchar(10))
+    -> returns int
+    -> deterministic
+    -> begin
+    -> declare credit int;
+    -> select tot_cred into credit from student where sid=stud_id;
+    -> return credit;
+    -> end;
+    -> $$
+Query OK, 0 rows affected (0.21 sec)
+Output:
+mysql> select f10('s2');
+    -> $$
++-----------+
+| f10('s2') |
++-----------+
+|         9 |
++-----------+
+1 row in set (0.03 sec)
+
+
+Conclusion : By this we studied the PL/SQL function block.

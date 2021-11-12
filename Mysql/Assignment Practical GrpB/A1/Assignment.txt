@@ -1,0 +1,243 @@
+GROUP : B
+	NAME: Anushka M Mulay	
+	ROLL NO: 35040
+	BATCH: B
+	CLASS:   TE(IT)-A
+	STATEMENT: 1.Design any database with atleast 3 entities and relationships between them.Apply DCL and DDL commands. 
+		   Draw suitable ER/EER diagram for the system.
+
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database bank;
+Query OK, 1 row affected (0.14 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| bank               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| university         |
++--------------------+
+6 rows in set (0.04 sec)
+
+mysql> use bank;
+Database changed
+mysql> create table customer (ssn integer primary key, fname varchar(10), lname varchar(10), city varchar(10);)
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+    -> create table customer (ssn integer primary key, fname varchar(10), lname varchar(10), city varchar(10));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')
+create table customer (ssn integer primary key, fname varchar(10), lname varch' at line 1
+mysql> create table customer (ssn integer primary key, fname varchar(10), lname varchar(10), city varchar(10));
+Query OK, 0 rows affected (1.70 sec)
+
+mysql> desc customer;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| ssn   | int         | NO   | PRI | NULL    |       |
+| fname | varchar(10) | YES  |     | NULL    |       |
+| lname | varchar(10) | YES  |     | NULL    |       |
+| city  | varchar(10) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> create table account(acc_no integer primary key, balance integer, ssn integer, foreign key(ssn) references customer(ssn));
+Query OK, 0 rows affected (0.70 sec)
+
+mysql> desc account;
++---------+------+------+-----+---------+-------+
+| Field   | Type | Null | Key | Default | Extra |
++---------+------+------+-----+---------+-------+
+| acc_no  | int  | NO   | PRI | NULL    |       |
+| balance | int  | YES  |     | NULL    |       |
+| ssn     | int  | YES  | MUL | NULL    |       |
++---------+------+------+-----+---------+-------+
+3 rows in set (0.11 sec)
+
+mysql> insert into customer(ssn, fname, lname, city) values (1,'A','B','Pune'), (2, 'C', 'D', 'Mumbai'), (3,'E', 'F', 'kolkata');
+Query OK, 3 rows affected (0.25 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from customer;
++-----+-------+-------+---------+
+| ssn | fname | lname | city    |
++-----+-------+-------+---------+
+|   1 | A     | B     | Pune    |
+|   2 | C     | D     | Mumbai  |
+|   3 | E     | F     | kolkata |
++-----+-------+-------+---------+
+3 rows in set (0.00 sec)
+
+mysql> insert into account(acc_no, balance, ssn) values (111,10000,1), (112,20000,2), (113, 30000, 3);
+Query OK, 3 rows affected (0.12 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from account;
++--------+---------+------+
+| acc_no | balance | ssn  |
++--------+---------+------+
+|    111 |   10000 |    1 |
+|    112 |   20000 |    2 |
+|    113 |   30000 |    3 |
++--------+---------+------+
+3 rows in set (0.08 sec)
+
+mysql> alter table customer add dob date;
+Query OK, 0 rows affected (1.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from customer;
++-----+-------+-------+---------+------+
+| ssn | fname | lname | city    | dob  |
++-----+-------+-------+---------+------+
+|   1 | A     | B     | Pune    | NULL |
+|   2 | C     | D     | Mumbai  | NULL |
+|   3 | E     | F     | kolkata | NULL |
++-----+-------+-------+---------+------+
+3 rows in set (0.00 sec)
+
+mysql> update customer set dob=2000-01-01 where ssn=1;
+ERROR 1292 (22007): Incorrect date value: '1998' for column 'dob' at row 1
+mysql> update customer set dob="2000-01-01" where ssn=1;
+Query OK, 1 row affected (0.17 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update customer set dob="1990-03-03" where ssn=2;
+Query OK, 1 row affected (0.19 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update customer set dob="1995-12-21" where ssn=3;
+Query OK, 1 row affected (0.43 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from customer;
++-----+-------+-------+---------+------------+
+| ssn | fname | lname | city    | dob        |
++-----+-------+-------+---------+------------+
+|   1 | A     | B     | Pune    | 2000-01-01 |
+|   2 | C     | D     | Mumbai  | 1990-03-03 |
+|   3 | E     | F     | kolkata | 1995-12-21 |
++-----+-------+-------+---------+------------+
+3 rows in set (0.00 sec)
+
+mysql> alter table customer add street varchar(20);
+Query OK, 0 rows affected (0.71 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update customer set street="JM Road" where ssn=3;
+Query OK, 1 row affected (0.07 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update customer set street="Tilak Road" where ssn=2;
+Query OK, 1 row affected (0.15 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update customer set street="Laxmi Road" where ssn=1;
+Query OK, 1 row affected (0.25 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from customer;
++-----+-------+-------+---------+------------+------------+
+| ssn | fname | lname | city    | dob        | street     |
++-----+-------+-------+---------+------------+------------+
+|   1 | A     | B     | Pune    | 2000-01-01 | Laxmi Road |
+|   2 | C     | D     | Mumbai  | 1990-03-03 | Tilak Road |
+|   3 | E     | F     | kolkata | 1995-12-21 | JM Road    |
++-----+-------+-------+---------+------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> alter table customer drop column street;
+Query OK, 0 rows affected (1.59 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from customer;
++-----+-------+-------+---------+------------+
+| ssn | fname | lname | city    | dob        |
++-----+-------+-------+---------+------------+
+|   1 | A     | B     | Pune    | 2000-01-01 |
+|   2 | C     | D     | Mumbai  | 1990-03-03 |
+|   3 | E     | F     | kolkata | 1995-12-21 |
++-----+-------+-------+---------+------------+
+3 rows in set (0.00 sec)
+
+mysql> create table loan(loan_no int primary key, amount int);
+Query OK, 0 rows affected (0.59 sec)
+
+mysql> desc loan;
++---------+------+------+-----+---------+-------+
+| Field   | Type | Null | Key | Default | Extra |
++---------+------+------+-----+---------+-------+
+| loan_no | int  | NO   | PRI | NULL    |       |
+| amount  | int  | YES  |     | NULL    |       |
++---------+------+------+-----+---------+-------+
+2 rows in set (0.14 sec)
+
+mysql> insert into loan(loan_no, amount) values (101,1000), (102, 2000), (103, 3000);
+Query OK, 3 rows affected (0.34 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from loan;
++---------+--------+
+| loan_no | amount |
++---------+--------+
+|     101 |   1000 |
+|     102 |   2000 |
+|     103 |   3000 |
++---------+--------+
+3 rows in set (0.00 sec)
+
+mysql> create table borrower(ssn int, foreign key(ssn) references customer(ssn), loan_no int, foreign key(loan_no) references loan(loan_no), primary key(loan_no));
+Query OK, 0 rows affected (2.02 sec)
+
+mysql> desc borrower;
++---------+------+------+-----+---------+-------+
+| Field   | Type | Null | Key | Default | Extra |
++---------+------+------+-----+---------+-------+
+| ssn     | int  | YES  | MUL | NULL    |       |
+| loan_no | int  | NO   | PRI | NULL    |       |
++---------+------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> insert into borrower (ssn, loan_no) values (1,101), (1, 103);
+Query OK, 2 rows affected (0.25 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> insert into borrower (ssn, loan_no) values (2,101), (3, 103);
+ERROR 1062 (23000): Duplicate entry '101' for key 'borrower.PRIMARY'
+mysql> insert into borrower (ssn, loan_no) values (3, 102);
+Query OK, 1 row affected (0.17 sec)
+
+mysql> select * from loan;
++---------+--------+
+| loan_no | amount |
++---------+--------+
+|     101 |   1000 |
+|     102 |   2000 |
+|     103 |   3000 |
++---------+--------+
+3 rows in set (0.15 sec)
+
+mysql> select * from borrower;
++------+---------+
+| ssn  | loan_no |
++------+---------+
+|    1 |     101 |
+|    1 |     103 |
+|    3 |     102 |
++------+---------+
+3 rows in set (0.00 sec)

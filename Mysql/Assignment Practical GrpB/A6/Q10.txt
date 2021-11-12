@@ -1,0 +1,93 @@
+mysql> delimiter //
+mysql> create procedure p7(in d_name varchar(10), out d_count int)
+    -> begin
+    -> select count(inst_id) into d_count from instructor where dept_name=d_name;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.18 sec)
+
+mysql> call p7('Computer');
+    -> //
+ERROR 1318 (42000): Incorrect number of arguments for PROCEDURE university.p7; expected 2, got 1
+mysql> call p7('Computer', @d_count);
+    -> //
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select @d_count;
+    -> //
++----------+
+| @d_count |
++----------+
+|        1 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> call p7('Physics', @d_count);
+    -> //
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select @d_count;
+    -> //
++----------+
+| @d_count |
++----------+
+|        2 |
++----------+
+1 row in set (0.00 sec)
+
+mysql>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mysql> delimiter //
+mysql> create function f3(d_name varchar(10))
+    -> returns int
+    -> deterministic
+    -> begin
+    -> declare d_count int;
+    -> select count(inst_id) into d_count from instructor where dept_name=d_name;
+    -> return d_count;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.20 sec)
+
+mysql> call f3('Music');
+    -> //
+ERROR 1305 (42000): PROCEDURE university.f3 does not exist
+mysql> select f3('Music');
+    -> //
++-------------+
+| f3('Music') |
++-------------+
+|           2 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql>

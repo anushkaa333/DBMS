@@ -1,0 +1,290 @@
+// SOME
+
+1) Problem Statement : Find the names of all instructors whose salary is greater than atleast one instructor in biology department
+Query : 
+mysql> select T.inst_name from instructor as T, instructor S where
+    -> T.salary>S.salary and S.dept_name="Biology";
+Output : 
++-----------+
+| inst_name |
++-----------+
+| PQR       |
+| EFG       |
+| LMN       |
+| UVW       |
++-----------+
+4 rows in set (0.04 sec)
+
+2)Problem statement : Find the sids' of some students whose tot_credits are less than student name-"E" 
+Query : 
+mysql> select sid from student where
+    -> tot_credits<some(select tot_credits from student where sname="E");
+Output : 
++-----+
+| sid |
++-----+
+| s6  |
++-----+
+1 row in set (0.00 sec)
+
+3)Problem Statement : Find the buildings along with roomno whose capcity is greater than or equal to roomno-11 in building-1
+Query :
+mysql> select building, roomno from classroom where
+    -> capacity>=some(select capacity from classroom where building=1);
+Output:
++----------+--------+
+| building | roomno |
++----------+--------+
+|        1 |     11 |
+|        2 |     12 |
+|        4 |     42 |
++----------+--------+
+3 rows in set (0.00 sec)
+
+
+4)Problem Statement : Find the course_id whose credits are less than in computer department 
+Query:
+mysql> select course_id from course where
+    -> credits<=some(select credits from course where dept_name="Computer");
+Output:
++-----------+
+| course_id |
++-----------+
+| Bio-1     |
+| Bio-2     |
+| CS-1      |
+| CS-2      |
+| His-1     |
+| Mu-1      |
+| Mu-2      |
+| Phy-2     |
++-----------+
+8 rows in set (0.05 sec)
+
+5) Problem Statement : Find tid from time_slot whose starting time is 9.
+Query :
+mysql> select tid from time_slot where
+    -> starttime=some(select starttime from time_slot where day="Tuesday");
+Output :
++-----+
+| tid |
++-----+
+| t1  |
+| t3  |
++-----+
+2 rows in set (0.12 sec)
+
+6) Problem Statement : Find semester, course_id , year from section table where tid is not equal to 3.
+Query :
+mysql> select semester, year, course_id from section where
+    -> tid<>some(select tid from section where sec_id="s12");
+Output:
++----------+------+-----------+
+| semester | year | course_id |
++----------+------+-----------+
+| I        | FY   | Bio-1     |
+| I        | FY   | Bio-2     |
+| II       | TY   | Mu-2      |
+| II       | SY   | CS-1      |
+| II       | TY   | Mu-1      |
+| II       | SY   | CS-2      |
++----------+------+-----------+
+6 rows in set (0.00 sec)
+
+//ALL
+1) Problem Statement : Find the names of all instructors whose salary is greater than all instructors in biology department
+Query :
+mysql> select inst_name from instructor where
+    -> salary>all(select salary from instructor where dept_name="Biology");
+Output:
++-----------+
+| inst_name |
++-----------+
+| PQR       |
+| EFG       |
+| LMN       |
+| UVW       |
++-----------+
+4 rows in set (0.00 sec)
+
+
+2) Find the all buildings along with roomno whose capcity is greater than or equal to roomno-32 in building-3
+Query :
+mysql> select building, roomno from classroom where
+    -> capacity>=all(select capacity from classroom where building=3);
+Output :
++----------+--------+
+| building | roomno |
++----------+--------+
+|        1 |     11 |
+|        2 |     12 |
+|        3 |     32 |
+|        4 |     42 |
+|        5 |     52 |
++----------+--------+
+5 rows in set (0.00 sec)
+
+
+3) Problem Statement : Find the sids' of any students whose tot_credits are less than student name-"B" 
+Query :
+mysql> select sid from student where
+    -> tot_credits<all(select tot_credits from student where sname="B");
+Output :
++-----+
+| sid |
++-----+
+| s1  |
+| s5  |
+| s6  |
++-----+
+3 rows in set (0.00 sec)
+
+4) Problem Statement : Find instructor id, course id, section id where they should not be from yearSY.
+Query :
+mysql> select inst_id, course_id, sec_id from teaches where
+    -> semester<>all(select semester from teaches where year="SY");
+Output:
++---------+-----------+--------+
+| inst_id | course_id | sec_id |
++---------+-----------+--------+
+|     117 | Bio-1     | s11    |
+|     117 | Bio-2     | s11    |
++---------+-----------+--------+
+2 rows in set (0.07 sec)
+
+
+5) Problem Statement : Find the course_id whose credits are less than in music department 
+Query:
+mysql> select course_id from course where
+    -> credits<=some (select credits from course where dept_name="Music");
+Output :
++-----------+
+| course_id |
++-----------+
+| Bio-1     |
+| Bio-2     |
+| CS-1      |
+| CS-2      |
+| His-1     |
+| Mu-1      |
+| Mu-2      |
+| Phy-2     |
++-----------+
+8 rows in set (0.00 sec)
+
+6) Problem Statement : Find tid from time_slot whose starting time is 9.
+Query :
+mysql> select tid from time_slot where
+    -> starttime=all(select starttime from time_slot where day="Tuesday");
+Output :
++-----+
+| tid |
++-----+
+| t1  |
+| t3  |
++-----+
+2 rows in set (0.12 sec)
+
+
+//Any
+
+1) Problem Statement : Find the names of any instructors whose salary is greater than all instructors in biology department
+Query :
+mysql> select inst_name from instructor where
+    -> salary>any(select salary from instructor where dept_name="Biology");
+Output:
++-----------+
+| inst_name |
++-----------+
+| PQR       |
+| EFG       |
+| LMN       |
+| UVW       |
++-----------+
+4 rows in set (0.00 sec)
+
+2) Problem Statement : Find any semester, year, course_id where year should not be TY.
+Query:
+mysql> select semester, course_id, year from takes where
+    -> year<>any(select year from takes where sec_id="s14");
+Output:
++----------+-----------+------+
+| semester | course_id | year |
++----------+-----------+------+
+| I        | Bio-1     | FY   |
+| I        | Bio-2     | FY   |
+| II       | Phy-2     | FY   |
+| II       | CS-1      | SY   |
+| I        | His-1     | FY   |
++----------+-----------+------+
+5 rows in set (0.00 sec)
+
+3)Problem Statement : Find any course_id whose credits are less than in computer department 
+Query:
+mysql> select course_id from course where
+    -> credits<=any(select credits from course where dept_name="Computer");
+Output:
++-----------+
+| course_id |
++-----------+
+| Bio-1     |
+| Bio-2     |
+| CS-1      |
+| CS-2      |
+| His-1     |
+| Mu-1      |
+| Mu-2      |
+| Phy-2     |
++-----------+
+8 rows in set (0.05 sec)
+
+
+4)  Find the any building along with roomno whose capcity is greater than or equal to roomno-52 in building-5
+Query:
+mysql> select building, roomno from classroom where
+    -> capacity>=any(select capacity from classroom where building=5);
+Output:
++----------+--------+
+| building | roomno |
++----------+--------+
+|        1 |     11 |
+|        2 |     12 |
+|        3 |     32 |
+|        4 |     42 |
+|        5 |     52 |
++----------+--------+
+5 rows in set (0.00 sec)
+
+
+5)Problem Statement :   Find the sids' of any student whose tot_credits are less than student name-"B" 
+Query :
+mysql> select sid from student where
+    -> tot_credits<any(select tot_credits from student where sname="B");
+Output :
++-----+
+| sid |
++-----+
+| s1  |
+| s5  |
+| s6  |
++-----+
+3 rows in set (0.00 sec)
+
+
+6) Problem Statement : Find semester, course_id , year from section table where tid is equal to 3.
+Query :
+mysql> select semester, year, course_id from section where
+    -> tid=some(select tid from section where sec_id="s12");
+Output:
++----------+------+-----------+
+| semester | year | course_id |
++----------+------+-----------+
+| II       | FY   | Phy-2     |
+| I        | FY   | His-1     |
+| II       | TY   | Bio-1     |
++----------+------+-----------+
+3 rows in set (0.00 sec)
+
+
+
+

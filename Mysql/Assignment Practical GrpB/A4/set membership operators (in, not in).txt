@@ -1,0 +1,81 @@
+1)Problem Statement:Find out set of courses taught in sem I fy and sem II Ty
+Query:
+ mysql> select course_id from teaches where semester='I' and year='FY' and course_id in (select course_id from teaches where semester='II' and year='TY');
+Output:
+Empty set (0.13 sec)
+
+2)Problem Statement : Find the names of instructors whose names are neither ABC nor LMN
+Query:
+mysql> select inst_name from instructor where inst_name not in('ABC','LMN');
+Output:
++-----------+
+| inst_name |
++-----------+
+| PQR       |
+| EFG       |
+| XYZ       |
+| UVW       |
+| HIJ       |
+| Jim       |
++-----------+
+6 rows in set (0.00 sec)
+
+3)Problem Statement:Find out set of courses taught in sem I fy but not in sem II Ty
+Query:
+mysql> select course_id from teaches where semester='I' and year='FY' and course_id not in ( select course_id from teaches where semester='II' and year='TY');
+Output:
++-----------+
+| course_id |
++-----------+
+| Bio-1     |
+| Bio-2     |
++-----------+
+2 rows in set (0.00 sec)
+
+4) Problem Statement : Find name and id of the student whose total credits are either 6 or 7
+Query:
+mysql> select sid, sname from student where tot_credits in(6,7);
+Output:
++-----+-------+
+| sid | sname |
++-----+-------+
+| s5  | E     |
+| s6  | F     |
++-----+-------+
+2 rows in set (0.00 sec)
+
+5) Problem Statement : Find tid from section which is in FY and TY as well.
+Query:
+mysql> select tid from section where year="FY" and tid in (select tid from section where year="TY");
+Output:
++------+
+| tid  |
++------+
+| t2   |
+| t3   |
+| t3   |
++------+
+3 rows in set (0.00 sec)
+
+6) Problem Statement : Find section id which is in semester II but not in semester I.
+Query:
+mysql> select sid from takes where semester="II" and sid not in (select sid from takes where semester="I");
+Output:
++-----+
+| sid |
++-----+
+| s4  |
+| s3  |
++-----+
+2 rows in set (0.06 sec)
+
+7) Problem Statement : Select instructor id where year should not be common.
+Query:
+mysql> select inst_id from teaches where course_id="Bio-1" and year not in (select inst_id from teaches where course_id="Mu-1");
+Output:
++---------+
+| inst_id |
++---------+
+|     117 |
++---------+
+1 row in set (0.00 sec)

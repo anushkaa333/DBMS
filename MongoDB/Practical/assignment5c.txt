@@ -1,0 +1,367 @@
+ASSIGNMENT NO 5
+
+NAME: Anushka M Mulay
+ROLL NO: 35040
+BATCH : B
+CLASS : TE(IT)-A
+GROUP : C
+TITLE : Implement the aggregation and indexing with suitable example in
+MongoDB. Demonstrate the following:
+ Aggregation framework
+ Create and drop different types of indexes and explain () to show the
+advantage of the indexes.
+
+----------------------------------------------------------------------------------
+> use bank;
+switched to db bank
+> db.createCollection("order");
+{ "ok" : 1 }
+> db.order.ensureIndex({cust_id:1},{unique:true,dropDups:true});
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "ok" : 1
+}
+
+--------------------------------INDEXING-------------------------------
+> db.order.ensureIndex({cust_id:1},{unique:true,dropDups:true});
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "ok" : 1
+}
+> db.order.insert({cust_id:1,product:"book",price:300,status:"Approved"});
+WriteResult({ "nInserted" : 1 })
+> db.order.insert({cust_id:2,product:"computer",price:30000,status:"not_Approved"});
+WriteResult({ "nInserted" : 1 })
+> db.order.insert({cust_id:3,product:"notebook",price:30,status:"Approved"});
+WriteResult({ "nInserted" : 1 })
+> db.order.insert({cust_id:3,product:"pen",price:10,status:"Approved"});
+WriteResult({
+        "nInserted" : 0,
+        "writeError" : {
+                "code" : 11000,
+                "errmsg" : "E11000 duplicate key error collection: bank.order index: cust_id_1 dup key: { cust_id: 3.0 }"
+        }
+})
+> db.order.insert({cust_id:4,product:"pen",price:10,status:"Approved"});
+WriteResult({ "nInserted" : 1 })
+> db.order.insert({cust_id:5,product:"pencil",price:5,status:"not_Approved"});
+WriteResult({ "nInserted" : 1 })
+> db.order.insert({cust_id:6,product:"cup",price:50,status:"Approved"});
+WriteResult({ "nInserted" : 1 })
+> db.order.find().pretty()
+{
+        "_id" : ObjectId("5fc12dab19caa99e9930f90b"),
+        "cust_id" : 1,
+        "product" : "book",
+        "price" : 300,
+        "status" : "Approved"
+}
+{
+        "_id" : ObjectId("5fc12dd519caa99e9930f90c"),
+        "cust_id" : 2,
+        "product" : "computer",
+        "price" : 30000,
+        "status" : "not_Approved"
+}
+{
+        "_id" : ObjectId("5fc12e0a19caa99e9930f90d"),
+        "cust_id" : 3,
+        "product" : "notebook",
+        "price" : 30,
+        "status" : "Approved"
+}
+{
+        "_id" : ObjectId("5fc12efc19caa99e9930f910"),
+        "cust_id" : 4,
+        "product" : "pen",
+        "price" : 10,
+        "status" : "Approved"
+}
+{
+        "_id" : ObjectId("5fc12f1a19caa99e9930f911"),
+        "cust_id" : 5,
+        "product" : "pencil",
+        "price" : 5,
+        "status" : "not_Approved"
+}
+{
+        "_id" : ObjectId("5fc12f3719caa99e9930f912"),
+        "cust_id" : 6,
+        "product" : "cup",
+        "price" : 50,
+        "status" : "Approved"
+}
+
+--------------------------------------EXPLAIN------------------------------
+> db.order.find().explain();
+{
+        "queryPlanner" : {
+                "plannerVersion" : 1,
+                "namespace" : "bank.order",
+                "indexFilterSet" : false,
+                "parsedQuery" : {
+
+                },
+                "queryHash" : "8B3D4AB8",
+                "planCacheKey" : "8B3D4AB8",
+                "winningPlan" : {
+                        "stage" : "COLLSCAN",
+                        "direction" : "forward"
+                },
+                "rejectedPlans" : [ ]
+        },
+        "serverInfo" : {
+                "host" : "DESKTOP-T0CTEKJ",
+                "port" : 27017,
+                "version" : "4.4.1",
+                "gitVersion" : "ad91a93a5a31e175f5cbf8c69561e788bbc55ce1"
+        },
+        "ok" : 1
+}
+
+----------------------------AGGREGATE FUNCTION---------------------------
+
+----------------1.SUM----------------------------
+> db.order.aggregate([{$match:{status:"Approved"}},{$group:{_id:"$cust_id",total:{$sum:"$price"}}}])
+{ "_id" : 4, "total" : 10 }
+{ "_id" : 1, "total" : 300 }
+{ "_id" : 3, "total" : 30 }
+{ "_id" : 6, "total" : 50 }
+> db.order.aggregate([{$match:{status:"Approved"}},{$group:{_id:"cust_id",total:{$sum:"$price"}}}])
+{ "_id" : "cust_id", "total" : 390 }
+
+---------------2.COUNT---------------------------
+> db.order.aggregate([{$match:{status:"not_Approved"}},{$group:{_id:"cust_id",count:{$sum:1}}}])
+{ "_id" : "cust_id", "count" : 2 }
+
+> db.order.aggregate([{$group:{_id:"$status",total:{$sum:"$price"},count:{$sum:1}}}])
+{ "_id" : "Approved", "total" : 390, "count" : 4 }
+{ "_id" : "not_Approved", "total" : 30005, "count" : 2 }
+
+---------------3.SUM WITH COUNT--------------------
+> db.order.aggregate([{$group:{_id:"$cust_id",total:{$sum:"$price"},count:{$sum:1}}}])
+{ "_id" : 1, "total" : 300, "count" : 1 }
+{ "_id" : 2, "total" : 30000, "count" : 1 }
+{ "_id" : 6, "total" : 50, "count" : 1 }
+{ "_id" : 4, "total" : 10, "count" : 1 }
+{ "_id" : 5, "total" : 5, "count" : 1 }
+{ "_id" : 3, "total" : 30, "count" : 1 }
+
+----------------4.MIN----------------------------------
+> db.order.aggregate([{$group:{_id:"$cust_id",total:{$min:"$price"}}}])
+{ "_id" : 4, "total" : 10 }
+{ "_id" : 1, "total" : 300 }
+{ "_id" : 2, "total" : 30000 }
+{ "_id" : 5, "total" : 5 }
+{ "_id" : 3, "total" : 30 }
+{ "_id" : 6, "total" : 50 }
+
+> db.order.aggregate([{$match:{status:"not_Approved"}},{$group:{_id:"$cust_id",total:{$min:"$price"}}}])
+{ "_id" : 2, "total" : 30000 }
+{ "_id" : 5, "total" : 5 }
+
+> db.order.aggregate([{$match:{status:"not_Approved"}},{$group:{_id:"cust_id",total:{$min:"$price"}}}])
+{ "_id" : "cust_id", "total" : 5 }
+
+-----------------5.MAX---------------------------------------
+> db.order.aggregate([{$group:{_id:"$cust_id",total:{$max:"$price"}}}])
+{ "_id" : 4, "total" : 10 }
+{ "_id" : 1, "total" : 300 }
+{ "_id" : 2, "total" : 30000 }
+{ "_id" : 5, "total" : 5 }
+{ "_id" : 3, "total" : 30 }
+{ "_id" : 6, "total" : 50 }
+
+> db.order.aggregate([{$match:{status:"Approved"}},{$group:{_id:"cust_id",total:{$max:"$price"}}}])
+{ "_id" : "cust_id", "total" : 300 }
+
+> db.order.aggregate([{$match:{status:"not_Approved"}},{$group:{_id:"cust_id",total:{$max:"$price"}}}])
+{ "_id" : "cust_id", "total" : 30000 }
+
+-----------------6.AVG------------------------------------------
+> db.order.aggregate([{$match:{status:"Approved"}},{$group:{_id:"cust_id",total:{$avg:"$price"}}}])
+{ "_id" : "cust_id", "total" : 97.5 }
+
+> db.order.aggregate([{$group:{_id:"$cust_id",total:{$avg:"$price"}}}])
+{ "_id" : 1, "total" : 300 }
+{ "_id" : 2, "total" : 30000 }
+{ "_id" : 6, "total" : 50 }
+{ "_id" : 4, "total" : 10 }
+{ "_id" : 5, "total" : 5 }
+{ "_id" : 3, "total" : 30 }
+
+> db.order.aggregate([{$match:{status:"Approved"}},{$group:{_id:"$cust_id",total:{$avg:"$price"}}}])
+{ "_id" : 4, "total" : 10 }
+{ "_id" : 1, "total" : 300 }
+{ "_id" : 3, "total" : 30 }
+{ "_id" : 6, "total" : 50 }
+
+------------------PROJECT-----------------------------------------
+> db.order.aggregate({"$project":{"cust_id":1}});
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "cust_id" : 1 }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "cust_id" : 2 }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "cust_id" : 3 }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "cust_id" : 4 }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "cust_id" : 5 }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "cust_id" : 6 }
+
+-------------------AGGREGATE PROJECT------------------------------------
+> db.order.aggregate({"$project":{"total":{"$add":["$price","$cust_id"]}}});
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "total" : 301 }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "total" : 30002 }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "total" : 33 }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "total" : 14 }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "total" : 10 }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "total" : 56 }
+
+--------------------SUBTRACT-------------------------------------------
+> db.order.aggregate({"$project":{"total":{"$subtract":["$price","$cust_id"]}}});
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "total" : 299 }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "total" : 29998 }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "total" : 27 }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "total" : 6 }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "total" : 0 }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "total" : 44 }
+
+--------------------MULTIPLY--------------------------------------------
+> db.order.aggregate({"$project":{"total":{"$multiply":["$price","$cust_id"]}}});
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "total" : 300 }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "total" : 60000 }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "total" : 90 }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "total" : 40 }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "total" : 25 }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "total" : 300 }
+
+-------------------DEVIDE----------------------------------------------------
+> db.order.aggregate({"$project":{"total":{"$divide":["$price","$cust_id"]}}});
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "total" : 300 }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "total" : 15000 }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "total" : 10 }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "total" : 2.5 }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "total" : 1 }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "total" : 8.333333333333334 }
+
+-------------------MOD-----------------------------------------------
+> db.order.aggregate({"$project":{"total":{"$mod":["$price","$cust_id"]}}});
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "total" : 0 }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "total" : 0 }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "total" : 0 }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "total" : 2 }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "total" : 0 }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "total" : 2 }
+
+--------------------SUBSTRING-----------------------------------------
+> db.order.aggregate({"$project":{"product":{"$substr":["$product",0,5]}}});
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "product" : "book" }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "product" : "compu" }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "product" : "noteb" }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "product" : "pen" }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "product" : "penci" }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "product" : "cup" }
+
+----------------------CONCAT------------------------------------------------------
+> db.order.aggregate({"$project":{"status":{"$concat":["your order is ","$status"]}}});
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "status" : "your order is Approved" }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "status" : "your order is not_Approved" }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "status" : "your order is Approved" }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "status" : "your order is Approved" }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "status" : "your order is not_Approved" }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "status" : "your order is Approved" }
+
+----------------------TO LOWER---------------------------------------------
+> db.order.aggregate({"$project":{"product":{"$toLower":["$product"]}}})
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "product" : "book" }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "product" : "computer" }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "product" : "notebook" }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "product" : "pen" }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "product" : "pencil" }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "product" : "cup" }
+
+---------------------TO UPPER-------------------------------------------
+> db.order.aggregate({"$project":{"product":{"$toUpper":["$product"]}}})
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "product" : "BOOK" }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "product" : "COMPUTER" }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "product" : "NOTEBOOK" }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "product" : "PEN" }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "product" : "PENCIL" }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "product" : "CUP" }
+
+---------------------COMPARE-------------------------------------------------
+> db.order.aggregate({"$project":{"product":{"$cmp":["Customer","Custmer"]}}})
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "product" : 1 }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "product" : 1 }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "product" : 1 }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "product" : 1 }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "product" : 1 }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "product" : 1 }
+
+> db.order.aggregate({"$project":{"product":{"$cmp":["Customer","Customer"]}}})
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "product" : 0 }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "product" : 0 }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "product" : 0 }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "product" : 0 }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "product" : 0 }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "product" : 0 }
+
+> db.order.aggregate({"$project":{"product":{"$cmp":["Custom","Customer"]}}})
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "product" : -1 }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "product" : -1 }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "product" : -1 }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "product" : -1 }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "product" : -1 }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "product" : -1 }
+
+--------------------------EQ-------------------------------------------------
+> db.order.aggregate({"$project":{"product":{"$eq":["CUSTOMER","CUSTOMER"]}}})
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "product" : true }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "product" : true }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "product" : true }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "product" : true }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "product" : true }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "product" : true }
+
+> db.order.aggregate({"$project":{"product":{"$eq":["CUSTOMR","CUSTOMER"]}}})
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "product" : false }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "product" : false }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "product" : false }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "product" : false }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "product" : false }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "product" : false }
+
+----------------------------NE--------------------------------------------
+> db.order.aggregate({"$project":{"product":{"$ne":["CUSTOMR","CUSTOMER"]}}})
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "product" : true }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "product" : true }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "product" : true }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "product" : true }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "product" : true }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "product" : true }
+
+> db.order.aggregate({"$project":{"product":{"$ne":["CUSTOMER","CUSTOMER"]}}})
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "product" : false }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "product" : false }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "product" : false }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "product" : false }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "product" : false }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "product" : false }
+
+---------------------------GT------------------------------------------
+> db.order.aggregate({"$project":{"number":{"$gt":[0,6]}}})
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "number" : false }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "number" : false }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "number" : false }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "number" : false }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "number" : false }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "number" : false }
+
+> db.order.aggregate({"$project":{"number":{"$gt":[6,2]}}})
+{ "_id" : ObjectId("5fc12dab19caa99e9930f90b"), "number" : true }
+{ "_id" : ObjectId("5fc12dd519caa99e9930f90c"), "number" : true }
+{ "_id" : ObjectId("5fc12e0a19caa99e9930f90d"), "number" : true }
+{ "_id" : ObjectId("5fc12efc19caa99e9930f910"), "number" : true }
+{ "_id" : ObjectId("5fc12f1a19caa99e9930f911"), "number" : true }
+{ "_id" : ObjectId("5fc12f3719caa99e9930f912"), "number" : true }

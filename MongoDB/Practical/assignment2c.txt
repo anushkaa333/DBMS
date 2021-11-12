@@ -1,0 +1,685 @@
+ASSIGNMENT NO 1
+
+NAME: Anushka M Mulay
+ROLL NO: 35040
+BATCH : B
+CLASS : TE(IT)-A
+GROUP : C
+TITLE : Execute at least 10 queries on any suitable mongodb database that demonstrates following
+querying techniques:
+1. Find and Findone (Specific Values)
+2. Query Criteria (Query Conditionals, Or Queries, $Not, Conditional Semantics)
+3. Type-Specific Queries (Null, Regular Expression, Querying Arrays)
+
+-----------------------------------------------------------------------------------------------------
+
+> use bank;
+switched to db bank
+> db.createCollection("staff");
+{ "ok" : 1 }
+> db.staff.insert({eid:100,ename:"QWE",salary:40000});
+WriteResult({ "nInserted" : 1 })
+> db.staff.insert({eid:200,ename:"RTY",salary:50000});
+WriteResult({ "nInserted" : 1 })
+> db.staff.insert({eid:200,ename:{"fname":"UIO","lname":"PAS"},salary:80000});
+WriteResult({ "nInserted" : 1 })
+> db.staff.insert({eid:300,ename:"DFG",salary:30000});
+WriteResult({ "nInserted" : 1 })
+> db.staff.insert({eid:300,ename:"HJK",salary:100000});
+WriteResult({ "nInserted" : 1 })
+> db.staff.find().pretty();
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("5fba8f44c004f110dd3adbd3"),
+        "eid" : 200,
+        "ename" : "RTY",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+1.FIND THE STAFF WITH ID 200
+> db.staff.find({eid:200}).pretty();
+{
+        "_id" : ObjectId("5fba8f44c004f110dd3adbd3"),
+        "eid" : 200,
+        "ename" : "RTY",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+
+2.FIND THE STAFF WITH ID 300
+> db.staff.find({eid:300}).pretty();
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+
+3..FIND THE STAFF WITH FNAME AS  UIO
+> db.staff.find({"ename.fname":"UIO"}).pretty();
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+
+4..FIND THE STAFF WITH SALARY 100000
+> db.staff.find({salary:100000}).pretty();
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+5.FIND STAFF WITH EID LESS THAN OR EQUAL TO 300
+> db.staff.find({eid:{$lte:300}}).pretty();
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("5fba8f44c004f110dd3adbd3"),
+        "eid" : 200,
+        "ename" : "RTY",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+
+6.FIND STAFF WITH SALARY VALUE GREATER THAN 50000
+> db.staff.find({salary:{$gt:50000}}).pretty();
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+7.FIND STAFF WITH SALARY GREATER THAN EQUAL TO 50000
+> db.staff.find({salary:{$gte:50000}}).pretty();
+{
+        "_id" : ObjectId("5fba8f44c004f110dd3adbd3"),
+        "eid" : 200,
+        "ename" : "RTY",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+8.FIND THE STAFF WITH EID NOT EQUAL TO 300
+> db.staff.find({eid:{$ne:300}}).pretty();
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("5fba8f44c004f110dd3adbd3"),
+        "eid" : 200,
+        "ename" : "RTY",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+9.FIND THE STAFF WITH EID  100 AND NAME QWE
+> db.staff.find({$and:[{eid:100,ename:"QWE"}]}).pretty();
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+
+10.FIND THE STAFF WITH NEIGHTER EID AS 200 NOR NAME AS RTY
+> db.staff.find({$nor:[{eid:200,ename:"RTY"}]}).pretty();
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+11.FIND THE STAFF WITH EID GREATER THAN 200
+> db.staff.find({eid:{$gt:200}}).pretty();
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+12.FIND THE STAFF WITH EID 100,300 USING IN OPERATOR
+> db.staff.find({eid:{$in:[100,300]}}).pretty();
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+
+13.FIND THE STAFF WITH SALARY 30000 OR NAME AS DFG
+> db.staff.find({$or:[{salary:{$lt:30000}},{ename:"DFG"}]}).pretty();
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+
+14.FIND STAFF WITH NEIGHTER EID 100 NOR 200
+> db.staff.find({eid:{$nin:[100,200]}}).pretty();
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+15.FIND THE STAFF WHOSE SALARY IS NOT LESS THAN 60000 AND EID IS NOT 400
+> db.staff.find({$and:[{salary:{$not:{$lt:60000}}},{eid:{$nin:[100]}}]}).pretty();
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+16.FIND THE STAFF WHOSE SALARY IS NOT LESS THAN 60000 AND EID IS NOT EITHER 100 OR 400
+> db.staff.find({$and:[{salary:{$not:{$lt:60000}}},{eid:{$nin:[100,400]}}]}).pretty();
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+
+17.FIND THE STAFF WITH FIRST NAME UIO AND EID NOT EITHER 100,400
+> db.staff.find({$and:[{"ename.fname":"UIO"},{eid:{$nin:[100,400]}}]}).pretty();
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+
+18.FIND THE STAFF WITH SALARY GREATER THAN 50000 AND NAME AS HJK WITH EID NOT EQUAL TO 100
+> db.staff.find({$and:[{salary:{$gt:50000}},{ename:"HJK"},{eid:{$ne:100}}]}).pretty();
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+19.FIND THE STAFF WHOSE SALARY IS LESS THAN 50000 BUT GREATER THAN 20000
+> db.staff.find({$and:[{salary:{$gt:20000}},{salary:{$lt:50000}}]}).pretty();
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+
+20.FIND THE STAFF WHOSE EID IS NOT GREATER THAN 300
+> db.staff.find({eid:{$not:{$gte:300}}}).pretty();
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("5fba8f44c004f110dd3adbd3"),
+        "eid" : 200,
+        "ename" : "RTY",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+
+21.FIND THE STAFF WHOSE NAME IS QWE USING NE
+> db.staff.find({$and:[{ename:"QWE"},{eid:{$ne:{eid:[200,300,400]}}}]}).pretty();
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+
+22.ARRANGE THE STAFF IN ASCENDING ORDER WITH RESPECT TO THEIR NAME
+> db.staff.find().sort({ename:1}).pretty();
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("5fba8f44c004f110dd3adbd3"),
+        "eid" : 200,
+        "ename" : "RTY",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+
+23.DISPLAY THE DOCUMENTS IN DESCENDING ORDER OF THEIR SALARY
+> db.staff.find().sort({salary:-1}).pretty();
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000
+}
+{
+        "_id" : ObjectId("5fba8f44c004f110dd3adbd3"),
+        "eid" : 200,
+        "ename" : "RTY",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+
+24.FIND THE STAFF WHOSE NAME IS QWE USING REGULAR EXPRESSION
+> db.staff.find({ename:{$regex:"QWE"}}).pretty()
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+
+25.FIND THE STAFF WHOSE NAME IS DFG (NOT CASE-SENSITIVE)
+> db.staff.find({ename:{$regex:"DFG",$options:"$I"}}).pretty()
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+
+> db.staff.find({ename:{$regex:"dfg",$options:"$i"}}).pretty()
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+
+> db.staff.find({ename:{$regex:"DFG",$options:"$i"}}).pretty()
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+
+UPDATE :
+> db.staff.update({eid:200},{$set:{Email:null}},{multi:true})
+WriteResult({ "nMatched" : 2, "nUpserted" : 0, "nModified" : 2 })
+
+26.FIND THE STAFF WHO DO NOT HAVE AN EMAIL ID
+> db.staff.find({Email:null}).pretty()
+{
+        "_id" : ObjectId("5fba8f1dc004f110dd3adbd2"),
+        "eid" : 100,
+        "ename" : "QWE",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("5fba8f44c004f110dd3adbd3"),
+        "eid" : 200,
+        "ename" : "RTY",
+        "salary" : 50000,
+        "Email" : null
+}
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000,
+        "Email" : null
+}
+{
+        "_id" : ObjectId("5fba8fecc004f110dd3adbd5"),
+        "eid" : 300,
+        "ename" : "DFG",
+        "salary" : 30000
+}
+{
+        "_id" : ObjectId("5fba900bc004f110dd3adbd6"),
+        "eid" : 400,
+        "ename" : "HJK",
+        "salary" : 100000
+}
+
+27.FIND THE STAFF WHOSE LAST NAME CONTAIN THE SUBSTRING AS
+> db.staff.find({"ename.lname":{$regex:/AS?/i}}).pretty()
+{
+        "_id" : ObjectId("5fba8fbcc004f110dd3adbd4"),
+        "eid" : 200,
+        "ename" : {
+                "fname" : "UIO",
+                "lname" : "PAS"
+        },
+        "salary" : 80000,
+        "Email" : null
+}
+
+28.DISPLAY THE RECORD OF CUSTOMER WHO HAVE MORE THAN 3 PHONE NO'S
+> db.account.find({phn_no:{"$size":3}}).pretty();
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "MNB",
+        "address" : "chennai",
+        "phn_no" : [
+                9432,
+                9878,
+                9908
+        ],
+        "balance" : 3500
+}
+
+29.FIND THE CUSTOMER WHOSE PHONE NO IS 1234 USING ALL OPERATOR
+> db.account.find({phn_no:{$all:[1234]}}).pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "JKL",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+
+30.ADD NEW PHONE NO TO CUSTOMER'S RECORD WHOSE ACCOUNT NO IS 56783
+> db.account.update({acc_no:56783},{"$push":{"phn_no":94237}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "JKL",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba66eedeb29af76d609d17"),
+        "acc_no" : 76544,
+        "name" : {
+                "fname" : "PQR",
+                "lname" : "STU"
+        },
+        "address" : "mumbai",
+        "phn_no" : 9423,
+        "balance" : 10000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "MNB",
+        "address" : "chennai",
+        "phn_no" : [
+                9432,
+                9878,
+                9908,
+                94237
+        ],
+        "balance" : 3500
+}
+{
+        "_id" : ObjectId("5fba7f1d8b4354cedb95fcd2"),
+        "acc_no" : 101,
+        "address" : "delhi",
+        "name" : "IOP"
+}
+
+31.DISPLAY ONLY TWO PHONE NO OF THE CUSTOMER WHOSE NAME IS MNB
+> db.account.find({name:"MNB"},{"phn_no":{"$slice":2}}).pretty();
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "MNB",
+        "address" : "chennai",
+        "phn_no" : [
+                9432,
+                9878
+        ],
+        "balance" : 3500
+}
+> db.account.find({name:"MNB"},{"phn_no":{"$slice":-2}}).pretty();
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "MNB",
+        "address" : "chennai",
+        "phn_no" : [
+                9908,
+                94237
+        ],
+        "balance" : 3500
+}
+
+32.FIND CUSTOMER WITH EITHER BALANCE LESS THAN 50000 OR NAME AS MNB
+> db.account.find({$or:[{balance:{$lt:5000}},{name:"MNB"}]}).pretty()
+{
+        "_id" : ObjectId("5fba65b3deb29af76d609d16"),
+        "acc_no" : 76543,
+        "name" : "JKL",
+        "address" : "pune",
+        "phn_no" : 1234,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("5fba6780deb29af76d609d18"),
+        "acc_no" : 56783,
+        "name" : "MNB",
+        "address" : "chennai",
+        "phn_no" : [
+                9432,
+                9878,
+                9908,
+                94237
+        ],
+        "balance" : 3500
+}

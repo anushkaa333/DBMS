@@ -1,0 +1,557 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database university;
+Query OK, 1 row affected (0.31 sec)
+
+mysql> use university;
+Database changed
+mysql> create table department(dept_name varchar(20) primary key, building integer, budget integer);
+Query OK, 0 rows affected (1.89 sec)
+
+mysql> desc departmant;
+ERROR 1146 (42S02): Table 'university.departmant' doesn't exist
+mysql> desc department;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| dept_name | varchar(20) | NO   | PRI | NULL    |       |
+| building  | int         | YES  |     | NULL    |       |
+| budget    | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.14 sec)
+
+mysql> insert into department('Biology', 5, 70000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''Biology', 5, 70000)' at line 1
+mysql> insert into department(dept_name, building, budget) values ('Biology', 5, 70000);
+Query OK, 1 row affected (0.27 sec)
+
+mysql> update department set budget=700000 where dept_name='Biology';
+Query OK, 1 row affected (0.20 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> insert into department(dept_name, building, budget) values ('Computer', 1, 500000);
+Query OK, 1 row affected (0.18 sec)
+
+mysql> insert into department(dept_name, building, budget) values ('History', 4, 300000);
+Query OK, 1 row affected (0.17 sec)
+
+mysql> insert into department(dept_name, building, budget) values ('Music', 2, 100000);
+Query OK, 1 row affected (0.17 sec)
+
+mysql> insert into department(dept_name, building, budget) values ('Physics', 3, 400000);
+Query OK, 1 row affected (0.19 sec)
+
+mysql> select * from department;
++-----------+----------+--------+
+| dept_name | building | budget |
++-----------+----------+--------+
+| Biology   |        5 | 700000 |
+| Computer  |        1 | 500000 |
+| History   |        4 | 300000 |
+| Music     |        2 | 100000 |
+| Physics   |        3 | 400000 |
++-----------+----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> create table instructor(inst_id integer primary key, inst_name varchar(20), salary integer, dept_name varchar(20), foreign key(dept_name) refernces department (dept_name);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'refernces department (dept_name)' at line 1
+mysql> create table instructor(inst_id integer primary key, inst_name varchar(20), salary integer, dept_name varchar(20), foreign key(dept_name) refernces department (dept_name));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'refernces department (dept_name))' at line 1
+mysql> create table instructor(inst_id integer primary key, inst_name varchar(20), salary integer, dept_name varchar(20), foreign key(dept_name) references department (dept_name));
+Query OK, 0 rows affected (1.56 sec)
+
+mysql> desc instructor;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| inst_id   | int         | NO   | PRI | NULL    |       |
+| inst_name | varchar(20) | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
+| dept_name | varchar(20) | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.10 sec)
+
+mysql> insert into instructor(inst_id, inst_name, salary, dept_name) values (111, 'ABC', 65000, 'Computer');
+Query OK, 1 row affected (0.12 sec)
+
+mysql> insert into instructor(inst_id, inst_name, salary, dept_name) values (112, 'PQR', 90000, 'Music');
+Query OK, 1 row affected (0.19 sec)
+
+mysql> insert into instructor(inst_id, inst_name, salary, dept_name) values (113, 'EFG', 70000, 'Physics');
+Query OK, 1 row affected (0.24 sec)
+
+mysql> insert into instructor(inst_id, inst_name, salary, dept_name) values (114, 'XYZ', 50000, 'History');
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into instructor(inst_id, inst_name, salary, dept_name) values (115, 'LMN', 90000, 'Music');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into instructor(inst_id, inst_name, salary, dept_name) values (116, 'UVW', 70000, 'Physics');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into instructor(inst_id, inst_name, salary, dept_name) values (117, 'STU', 55000, 'Biology');
+Query OK, 1 row affected (0.17 sec)
+
+mysql> select * from instructor;
++---------+-----------+--------+-----------+
+| inst_id | inst_name | salary | dept_name |
++---------+-----------+--------+-----------+
+|     111 | ABC       |  65000 | Computer  |
+|     112 | PQR       |  90000 | Music     |
+|     113 | EFG       |  70000 | Physics   |
+|     114 | XYZ       |  50000 | History   |
+|     115 | LMN       |  90000 | Music     |
+|     116 | UVW       |  70000 | Physics   |
+|     117 | STU       |  55000 | Biology   |
++---------+-----------+--------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> create table student( sid varchar(20) primary key, sname varchar(20), tot_credits int, dept_name varchar(20), foreign key(dept_name) references department(dept_name));
+Query OK, 0 rows affected (0.70 sec)
+
+mysql> insert into student(sid,name,dept_name,tot_cred)
+    -> values('S1','Aashish','Music',8),('S2','Rakesh','Computer',9),
+    -> ('S3','Chetan','Music',9),('S4','Mayuri','Physics',9),('S5','Priya','Biology',7),
+    -> desc student;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'desc student' at line 4
+mysql> desc student;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| sid         | varchar(20) | NO   | PRI | NULL    |       |
+| sname       | varchar(20) | YES  |     | NULL    |       |
+| tot_credits | int         | YES  |     | NULL    |       |
+| dept_name   | varchar(20) | YES  | MUL | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.04 sec)
+
+mysql> insert into student(sid, sname, tot_credits, dept_name) values ('s1', 'A', 8, 'Music'), ('s2', 'B', 9, 'Computer'), ('s3', 'C', 9, 'Music'), ('s4', 'D', 9, 'Physics'), ('s5', 'E', 7, 'Biology'), ('s6', 'F', 6, 'Computer');
+Query OK, 6 rows affected (0.23 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from student;
++-----+-------+-------------+-----------+
+| sid | sname | tot_credits | dept_name |
++-----+-------+-------------+-----------+
+| s1  | A     |           8 | Music     |
+| s2  | B     |           9 | Computer  |
+| s3  | C     |           9 | Music     |
+| s4  | D     |           9 | Physics   |
+| s5  | E     |           7 | Biology   |
+| s6  | F     |           6 | Computer  |
++-----+-------+-------------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> insert into student(sid, sname, tot_credits, dept_name) values ('s7', 'G', 9, 'History');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from student;
++-----+-------+-------------+-----------+
+| sid | sname | tot_credits | dept_name |
++-----+-------+-------------+-----------+
+| s1  | A     |           8 | Music     |
+| s2  | B     |           9 | Computer  |
+| s3  | C     |           9 | Music     |
+| s4  | D     |           9 | Physics   |
+| s5  | E     |           7 | Biology   |
+| s6  | F     |           6 | Computer  |
+| s7  | G     |           9 | History   |
++-----+-------+-------------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> create table classroom(building int, roomno int, capacity int, primary key(building, roomno));
+Query OK, 0 rows affected (0.79 sec)
+
+mysql> desc classroom;
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| building | int  | NO   | PRI | NULL    |       |
+| roomno   | int  | NO   | PRI | NULL    |       |
+| capacity | int  | YES  |     | NULL    |       |
++----------+------+------+-----+---------+-------+
+3 rows in set (0.11 sec)
+
+mysql> insert into classroom(building, roomno, capacity) values (1,11,120), (2,12,120), (3,32,60), (4,42,180), (5,52.60);
+ERROR 1136 (21S01): Column count doesn't match value count at row 5
+mysql> insert into classroom(building, roomno, capacity) values (1,11,120), (2,12,120), (3,32,60), (4,42,180), (5,52,60);
+Query OK, 5 rows affected (0.19 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from classroom;
++----------+--------+----------+
+| building | roomno | capacity |
++----------+--------+----------+
+|        1 |     11 |      120 |
+|        2 |     12 |      120 |
+|        3 |     32 |       60 |
+|        4 |     42 |      180 |
+|        5 |     52 |       60 |
++----------+--------+----------+
+5 rows in set (0.00 sec)
+
+mysql> create table course(course_id varchar(10) primary key, title varchar(20), credits int, dept_name varchar(10), foreign key(dept_name) references from department(dept_name));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from department(dept_name))' at line 1
+mysql> create table course(course_id varchar(10) primary key, title varchar(20), credits int, dept_name varchar(10), foreign key(dept_name) references department(dept_name));
+Query OK, 0 rows affected (1.44 sec)
+
+mysql> desc course;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| course_id | varchar(10) | NO   | PRI | NULL    |       |
+| title     | varchar(20) | YES  |     | NULL    |       |
+| credits   | int         | YES  |     | NULL    |       |
+| dept_name | varchar(10) | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> insert into course
+    -> insert into course(course_id,title,credits,dept_name) values('Bio-
+    '> 1','Intro to Bio',4,'Biology'),('Phy-2','Physics Principles',4,'Physics'),('CS-
+    '> 1','Intro to CS',3,'Computer'),('CS-2','Robotics',4,'Computer'),('Bio-
+    '> 2','Genetics',3,'Biology'),('His-1','World History',4,'History'),('Mu-2','Music
+    '>
+    '> video promotion',4,'Music'),('Mu-1','Music audio',3,'Music');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'insert into course(course_id,title,credits,dept_name) values('Bio-
+1','Intro to ' at line 2
+mysql> insert into course(course_id,title,credits,dept_name) values('Bio-
+    '> select * from course;
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '>
+    '> desc course;
+    '>
+    '>
+    '>
+    '> values('Bio))
+    -> desc course;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Bio))
+desc course' at line 15
+mysql> select * from course;
+Empty set (0.06 sec)
+
+mysql> insert into course(course_id,title,credits,dept_name) values('Bio-
+    '> 1','Intro to Bio',4,'Biology'),('Phy-2','Physics Principles',4,'Physics'),('CS-
+    '> 1','Intro to CS',3,'Computer'),('CS-2','Robotics',4,'Computer'),('Bio-
+    '> 2','Genetics',3,'Biology'),('His-1','World History',4,'History'),('Mu-2','Music
+    '>
+    '> video promotion',4,'Music'),('Mu-1','Music audio',3,'Music');
+ERROR 1406 (22001): Data too long for column 'title' at row 7
+mysql> insert into course(course_id, title, credits, dept_name) values ('Bio-1', 'Into to bio', 4, 'Biology'), ('Bio-2', 'Genetics', 3, 'Biology'), ('CS-1', 'Intro to CS', 3, 'Computer'), ('CS-2', 'Robotics', 4, 'Computer'), ('His-1', 'World History', 4, 'History'), ('Mu-1', 'Music audio', 3, 'Music'), ('Mu-2', 'Music video promo', 4, 'Music'), ('Phy-2', 'Physics principles', 4, 'physics');
+Query OK, 8 rows affected (0.12 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql> select * from course;
++-----------+--------------------+---------+-----------+
+| course_id | title              | credits | dept_name |
++-----------+--------------------+---------+-----------+
+| Bio-1     | Into to bio        |       4 | Biology   |
+| Bio-2     | Genetics           |       3 | Biology   |
+| CS-1      | Intro to CS        |       3 | Computer  |
+| CS-2      | Robotics           |       4 | Computer  |
+| His-1     | World History      |       4 | History   |
+| Mu-1      | Music audio        |       3 | Music     |
+| Mu-2      | Music video promo  |       4 | Music     |
+| Phy-2     | Physics principles |       4 | physics   |
++-----------+--------------------+---------+-----------+
+8 rows in set (0.00 sec)
+
+mysql> create table time_slot(tid varchar(20) primary key, day varchar(20), starttime varchar(20), endtime varchar(20));
+Query OK, 0 rows affected (2.21 sec)
+
+mysql> desc time_slot;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| tid       | varchar(20) | NO   | PRI | NULL    |       |
+| day       | varchar(20) | YES  |     | NULL    |       |
+| starttime | varchar(20) | YES  |     | NULL    |       |
+| endtime   | varchar(20) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.02 sec)
+
+mysql> insert into time_slot(tid,day,start_time,end_time)
+    -> values('t1','Monday','09:00:00','02:00:00'),('t2','Monday','10:00:00','03:00:00'),
+    -> ('t3','Tuesday','09:00:00','02:00:00'),('t4','Thursday','08:00:00','10:00:00'),
+    -> ('t5','Friday','07:00:00','09:00:00');
+ERROR 1054 (42S22): Unknown column 'start_time' in 'field list'
+mysql> insert into time_slot(tid,day,start_time,end_time)
+    -> values('t1','Monday','09:00:00','02:00:00'),('t2','Monday','10:00:00','03:00:00'),
+    -> ('t3','Tuesday','09:00:00','02:00:00'),('t4','Thursday','08:00:00','10:00:00'),
+    -> ('t5','Friday','07:00:00','09:00:00');
+ERROR 1054 (42S22): Unknown column 'start_time' in 'field list'
+mysql> insert into time_slot(tid,day,starttime,endtime)
+    -> values('t1','Monday','09:00:00','02:00:00'),('t2','Monday','10:00:00','03:00:00'),
+    -> ('t3','Tuesday','09:00:00','02:00:00'),('t4','Thursday','08:00:00','10:00:00'),
+    -> ('t5','Friday','07:00:00','09:00:00');
+Query OK, 5 rows affected (0.08 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from time_slot;
++-----+----------+-----------+----------+
+| tid | day      | starttime | endtime  |
++-----+----------+-----------+----------+
+| t1  | Monday   | 09:00:00  | 02:00:00 |
+| t2  | Monday   | 10:00:00  | 03:00:00 |
+| t3  | Tuesday  | 09:00:00  | 02:00:00 |
+| t4  | Thursday | 08:00:00  | 10:00:00 |
+| t5  | Friday   | 07:00:00  | 09:00:00 |
++-----+----------+-----------+----------+
+5 rows in set (0.00 sec)
+
+mysql> create table advisor(sid varchar(20), foreign key (sid) references student(sid), inst_id int, foreign key(inst_id), references instructor(inst_id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', references instructor(inst_id))' at line 1
+mysql> create table advisor(sid varchar(20), foreign key (sid) references student(sid), inst_id int, foreign key(inst_id) references instructor(inst_id));
+Query OK, 0 rows affected (1.49 sec)
+
+mysql> insert into advisor(sid,inst_id) values('s1',112),('s2',111),('s3',114),
+    -> ('s4',113),('s5',112);
+Query OK, 5 rows affected (0.32 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from advisor;
++------+---------+
+| sid  | inst_id |
++------+---------+
+| s1   |     112 |
+| s2   |     111 |
+| s3   |     114 |
+| s4   |     113 |
+| s5   |     112 |
++------+---------+
+5 rows in set (0.00 sec)
+
+mysql> desc advisor;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| sid     | varchar(20) | YES  | MUL | NULL    |       |
+| inst_id | int         | YES  | MUL | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> create table section (sec_id varchar(10), semester varchar(10), year varchar(10), course_id varchar(10), foreign key(course_id) references course(course_id), tid varchar(20), foreign key(tid) references time_slot(tid), building int, roomno int, foreign key(building, roomno), primary key(sec_id, semester, year,course_id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', primary key(sec_id, semester, year,course_id))' at line 1
+mysql> create table section (sec_id varchar(10), semester varchar(10), year varchar(10), course_id varchar(10), foreign key(course_id) references course(course_id), tid varchar(20), foreign key(tid) references time_slot(tid), building int, roomno int, foreign key(building, roomno), primary key(sec_id, semester, year));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', primary key(sec_id, semester, year))' at line 1
+mysql> create table section (sec_id varchar(10), semester varchar(10), year varchar(10), course_id varchar(10), foreign key(course_id) references course(course_id), tid varchar(20), foreign key(tid) references time_slot(tid), building int, roomno int, foreign key(building, roomno) references classroom, primary key(sec_id, semester, year,course_id));
+ERROR 1239 (42000): Incorrect foreign key definition for 'foreign key without name': Key reference and table reference don't match
+mysql> create table section (sec_id varchar(10), semester varchar(10), year varchar(10), course_id varchar(10), foreign key(course_id) references course(course_id), tid varchar(20), foreign key(tid) references time_slot(tid), building int, roomno int, foreign key(building, roomno) references classroom, primary key(sec_id, semester, year));
+ERROR 1239 (42000): Incorrect foreign key definition for 'foreign key without name': Key reference and table reference don't match
+mysql> create table section (sec_id varchar(10), semester varchar(10), year varchar(10), course_id varchar(10), foreign key(course_id) references course(course_id), tid varchar(20), foreign key(tid) references time_slot(tid), building int, roomno int, foreign key(building, roomno) references classroom(building, roomno), primary key(sec_id, semester, year,course_id));
+Query OK, 0 rows affected (1.88 sec)
+
+mysql> desc section;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| sec_id    | varchar(10) | NO   | PRI | NULL    |       |
+| semester  | varchar(10) | NO   | PRI | NULL    |       |
+| year      | varchar(10) | NO   | PRI | NULL    |       |
+| course_id | varchar(10) | NO   | PRI | NULL    |       |
+| tid       | varchar(20) | YES  | MUL | NULL    |       |
+| building  | int         | YES  | MUL | NULL    |       |
+| roomno    | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+7 rows in set (0.02 sec)
+
+mysql> insert into
+    ->
+    -> section(course_id,sec_id,semester,year,building,roomno,tid)
+    -> values('Phy-
+    '> 2','S12','II','FY',3,32,'t3'),('CS-1','S13','II','SY',1,11,'t4'),('CS-
+    '> 2','S13','II','SY',3,32,'t5'),('Mu-1','S14','II','TY',2,21,'t4'),('Mu-
+    '> 2','S14','II','TY',2,21,'t2'),('His-1','S15','I','FY',4,42,'t3'),('Bio-
+    '> 1','s16', 'II', 'TY', 5, 52, 't3');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`university`.`section`, CONSTRAINT `section_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`))
+mysql> insert into section(course_id,sec_id,semester,year,building,roomno,tid)
+    -> values('Phy-2','s12','II','FY',3,32,'t3'),('CS-1','s13','II','SY',1,11,'t4'),
+    -> ('CS-2','s13','II','SY',3,32,'t5'),('Mu-1','s14','II','TY',2,21,'t4'),
+    -> ('Mu-2','s14','II','TY',2,21,'t2'),('His-1','s15','I','FY',4,42,'t3'),
+    -> ('Bio-1','s16','II','TY',5,52,'t3');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`university`.`section`, CONSTRAINT `section_ibfk_3` FOREIGN KEY (`building`, `roomno`) REFERENCES `classroom` (`building`, `roomno`))
+mysql> insert into section(course_id,sec_id,semester,year,building,roomno,tid)
+    -> values('Phy-2','s12','II','FY',3,32,'t3'),('CS-1','s13','II','SY',1,11,'t4'),
+    -> ('CS-2','s13','II','SY',3,32,'t5'),('Mu-1','s14','II','TY',2,21,'t4'),
+    -> ('Mu-2','s14','II','TY',2,21,'t2'),('His-1','s15','I','FY',4,42,'t3'),
+    -> ('Mu-2','s14','II','TY',2,21,'t2'),('His-1','s15','I','FY',4,42,'t3'),
+    ->
+    -> ('Mu-2','s14','II','TY',2,21,'t2'),('His-1','s15','I','FY',4,42,'t3'),
+    -> insert into section(course_id,sec_id,semester,year,building,roomno,tid)
+    -> values('Phy-2','s12','II','FY',3,32,'t3'),('CS-1','s13','II','SY',1,11,'t4'),
+    -> ('CS-2','s13','II','SY',3,32,'t5'),('Mu-1','s14','II','TY',2,21,'t4'),
+    -> ('Mu-2','s14','II','TY',2,21,'t2'),('His-1','s15','I','FY',4,42,'t3'),
+    -> ('Bio-1','s16','II','TY',5,52,'t3');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'insert into section(course_id,sec_id,semester,year,building,roomno,tid)
+values('' at line 8
+mysql> insert into section(course_id,sec_id,semester,year,building,roomno,tid)
+    -> values('Phy-2','s12','II','FY',3,32,'t3'),('CS-1','s13','II','SY',1,11,'t4'),
+    -> ('CS-2','s13','II','SY',3,32,'t5'),('Mu-1','s14','II','TY',2,12,'t4'),
+    -> ('Mu-2','s14','II','TY',2,21,'t2'),('His-1','s15','I','FY',4,42,'t3'),
+    -> ('Bio-1','s16','II','TY',5,52,'t3');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`university`.`section`, CONSTRAINT `section_ibfk_3` FOREIGN KEY (`building`, `roomno`) REFERENCES `classroom` (`building`, `roomno`))
+mysql> insert into section(course_id,sec_id,semester,year,building,roomno,tid)
+    -> values('Phy-2','s12','II','FY',3,32,'t3'),('CS-1','s13','II','SY',1,11,'t4'),
+    -> ('CS-2','s13','II','SY',3,32,'t5'),('Mu-1','s14','II','TY',2,12,'t4'),
+    -> ('Mu-2','s14','II','TY',2,12,'t2'),('His-1','s15','I','FY',4,42,'t3'),
+    -> ('Bio-1','s16','II','TY',5,52,'t3');
+Query OK, 7 rows affected (0.22 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from section;
++--------+----------+------+-----------+------+----------+--------+
+| sec_id | semester | year | course_id | tid  | building | roomno |
++--------+----------+------+-----------+------+----------+--------+
+| s12    | II       | FY   | Phy-2     | t3   |        3 |     32 |
+| s13    | II       | SY   | CS-1      | t4   |        1 |     11 |
+| s13    | II       | SY   | CS-2      | t5   |        3 |     32 |
+| s14    | II       | TY   | Mu-1      | t4   |        2 |     12 |
+| s14    | II       | TY   | Mu-2      | t2   |        2 |     12 |
+| s15    | I        | FY   | His-1     | t3   |        4 |     42 |
+| s16    | II       | TY   | Bio-1     | t3   |        5 |     52 |
++--------+----------+------+-----------+------+----------+--------+
+7 rows in set (0.00 sec)
+
+mysql> create table takes;
+ERROR 1113 (42000): A table must have at least 1 column
+mysql> drop table takes;
+ERROR 1051 (42S02): Unknown table 'university.takes'
+mysql> create table takes( sid varchar(10), foreign key (sid) references student (sid), sec_id varchar(10), semester varchar(10), year varchar(10), course_id varchar(20),foreign key (sec_id, semester, year, course_id) references section (sec_id, semester, year, course_id), grade varchar(10), primary key(sid, sec_id, semester, year, course_id));
+Query OK, 0 rows affected (1.37 sec)
+
+mysql> desc takes;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| sid       | varchar(10) | NO   | PRI | NULL    |       |
+| sec_id    | varchar(10) | NO   | PRI | NULL    |       |
+| semester  | varchar(10) | NO   | PRI | NULL    |       |
+| year      | varchar(10) | NO   | PRI | NULL    |       |
+| course_id | varchar(20) | NO   | PRI | NULL    |       |
+| grade     | varchar(10) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+6 rows in set (0.12 sec)
+
+mysql> insert into takes(course_id,sec_id,semester,year,sid,grade)
+    -> values('Phy-2','s12','II','FY','s4','a+'),('CS-1','s13','II','SY','s5','b'),
+    -> ('Mu-2','s14','II','TY','s3','a'),('His-1','s15','I','FY','s7','c'),
+    -> ('Bio-1','s11','I','FY','s5','a'),('Bio-2','s11','I','FY','s5','b');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`university`.`takes`, CONSTRAINT `takes_ibfk_2` FOREIGN KEY (`sec_id`, `semester`, `year`, `course_id`) REFERENCES `section` (`sec_id`, `semester`, `year`, `course_id`))
+mysql> insert into section (course_id, sec_id, semester, year, tid, building, roomno) values
+    -> ('Bio-1', 's11', 'I', 'FY', 't1', 5, 52 );
+Query OK, 1 row affected (0.43 sec)
+
+mysql> insert into section (course_id, sec_id, semester, year, tid, building, roomno) values
+    -> ('Bio-2', 's11', 'I', 'FY', 't2', 4, 42 );
+Query OK, 1 row affected (0.18 sec)
+
+mysql> select * from section;
++--------+----------+------+-----------+------+----------+--------+
+| sec_id | semester | year | course_id | tid  | building | roomno |
++--------+----------+------+-----------+------+----------+--------+
+| s11    | I        | FY   | Bio-1     | t1   |        5 |     52 |
+| s11    | I        | FY   | Bio-2     | t2   |        4 |     42 |
+| s12    | II       | FY   | Phy-2     | t3   |        3 |     32 |
+| s13    | II       | SY   | CS-1      | t4   |        1 |     11 |
+| s13    | II       | SY   | CS-2      | t5   |        3 |     32 |
+| s14    | II       | TY   | Mu-1      | t4   |        2 |     12 |
+| s14    | II       | TY   | Mu-2      | t2   |        2 |     12 |
+| s15    | I        | FY   | His-1     | t3   |        4 |     42 |
+| s16    | II       | TY   | Bio-1     | t3   |        5 |     52 |
++--------+----------+------+-----------+------+----------+--------+
+9 rows in set (0.00 sec)
+
+mysql> insert into takes(course_id,sec_id,semester,year,sid,grade)
+    -> values('Phy-2','s12','II','FY','s4','a+'),('CS-1','s13','II','SY','s5','b'),
+    -> ('Mu-2','s14','II','TY','s3','a'),('His-1','s15','I','FY','s7','c'),
+    -> ('Bio-1','s11','I','FY','s5','a'),('Bio-2','s11','I','FY','s5','b');
+Query OK, 6 rows affected (0.18 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from takes;
++-----+--------+----------+------+-----------+-------+
+| sid | sec_id | semester | year | course_id | grade |
++-----+--------+----------+------+-----------+-------+
+| s3  | s14    | II       | TY   | Mu-2      | a     |
+| s4  | s12    | II       | FY   | Phy-2     | a+    |
+| s5  | s11    | I        | FY   | Bio-1     | a     |
+| s5  | s11    | I        | FY   | Bio-2     | b     |
+| s5  | s13    | II       | SY   | CS-1      | b     |
+| s7  | s15    | I        | FY   | His-1     | c     |
++-----+--------+----------+------+-----------+-------+
+6 rows in set (0.00 sec)
+
+mysql> create table teaches( inst_id int, foreign key(inst_id) references instructor(inst_id), course_id varchar(20), foreign key(course_id) references course (course_id), sec_id varchar(10), semester varchar(10), year(10), foreign key(sec_id, semester, year) references section(sec_id, semester, year));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(10), foreign key(sec_id, semester, year) references section(sec_id, semester, y' at line 1
+mysql> create table teaches( inst_id int, foreign key(inst_id) references instructor(inst_id), course_id varchar(20), foreign key(course_id) references course (course_id), sec_id varchar(10), semester varchar(10), year varchar(10), foreign key(sec_id, semester, year) references section(sec_id, semester, year));
+Query OK, 0 rows affected (2.59 sec)
+
+mysql> desc teaches;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| inst_id   | int         | YES  | MUL | NULL    |       |
+| course_id | varchar(20) | YES  | MUL | NULL    |       |
+| sec_id    | varchar(10) | YES  | MUL | NULL    |       |
+| semester  | varchar(10) | YES  |     | NULL    |       |
+| year      | varchar(10) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> insert into teaches(course_id,sec_id,semester,year,id)
+    -> values('Bio-1','s11','I','FY',117),('Phy-2','s12','II','FY',113),
+    -> ('CS-2','s13','II','SY',111),('Bio-2','s11','I','FY',117),
+    -> ('Mu-1','s14','II','TY',115);
+ERROR 1054 (42S22): Unknown column 'id' in 'field list'
+mysql> insert into teaches(course_id,sec_id,semester,year,inst_id)
+    -> values('Bio-1','s11','I','FY',117),('Phy-2','s12','II','FY',113),
+    -> ('CS-2','s13','II','SY',111),('Bio-2','s11','I','FY',117),
+    -> ('Mu-1','s14','II','TY',115);
+Query OK, 5 rows affected (0.28 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from teaches;
++---------+-----------+--------+----------+------+
+| inst_id | course_id | sec_id | semester | year |
++---------+-----------+--------+----------+------+
+|     117 | Bio-1     | s11    | I        | FY   |
+|     113 | Phy-2     | s12    | II       | FY   |
+|     111 | CS-2      | s13    | II       | SY   |
+|     117 | Bio-2     | s11    | I        | FY   |
+|     115 | Mu-1      | s14    | II       | TY   |
++---------+-----------+--------+----------+------+
+5 rows in set (0.00 sec)
+
+mysql> show tables;
++----------------------+
+| Tables_in_university |
++----------------------+
+| advisor              |
+| classroom            |
+| course               |
+| department           |
+| instructor           |
+| section              |
+| student              |
+| takes                |
+| teaches              |
+| time_slot            |
++----------------------+
+10 rows in set (0.15 sec)

@@ -1,0 +1,502 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 21
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use university;
+Database changed
+mysql> show tables;
++----------------------+
+| Tables_in_university |
++----------------------+
+| advisor              |
+| classroom            |
+| course               |
+| department           |
+| instructor           |
+| section              |
+| student              |
+| takes                |
+| teaches              |
+| time_slot            |
++----------------------+
+10 rows in set (0.01 sec)
+
+*****1.Find the names of instructor in computer department who have salary greater than 60000*****
+
+mysql> select inst_name from instructor where salary>60000 and dept_name='Computer';
++-----------+
+| inst_name |
++-----------+
+| ABC       |
++-----------+
+1 row in set (0.00 sec)
+
+
+
+*****2.Find names of instructor who are working in Physics department*****
+
+mysql> select inst_name from instructor where dept_name='Physics';
++-----------+
+| inst_name |
++-----------+
+| EFG       |
+| UVW       |
++-----------+
+2 rows in set (0.00 sec)
+
+
+*****3.Find names of department whose budget is greater than 5 lakh*****
+
+
+mysql> select dept_name from department where budget>500000;
++-----------+
+| dept_name |
++-----------+
+| Biology   |
++-----------+
+1 row in set (0.12 sec)
+
+
+*****4.Find names of students studying in computer department*****
+
+
+mysql> select sname from student where dept_name='Computer';
++-------+
+| sname |
++-------+
+| B     |
+| F     |
++-------+
+2 rows in set (0.04 sec)
+
+
+*****5.Find names of students studying in music department & got total credits more than 7*****
+
+mysql> select sname from student where dept_name='Music' and tot_credits>7;
++-------+
+| sname |
++-------+
+| A     |
+| C     |
++-------+
+2 rows in set (0.00 sec)
+
+
+*****6.Find capacity of room numbers*****
+
+
+mysql> select roomno, capacity from classroom;
++--------+----------+
+| roomno | capacity |
++--------+----------+
+|     11 |      120 |
+|     12 |      120 |
+|     32 |       60 |
+|     42 |      180 |
+|     52 |       60 |
++--------+----------+
+5 rows in set (0.12 sec)
+
+
+*****7. Find out titles along with department name of biology department*****
+
+
+mysql> select title, dept_name from course where dept_name='Biology';
++-------------+-----------+
+| title       | dept_name |
++-------------+-----------+
+| Into to bio | Biology   |
+| Genetics    | Biology   |
++-------------+-----------+
+2 rows in set (0.00 sec)
+
+
+*****8. Find out titles of music department*****
+
+
+mysql> select title from course where dept_name='Music';
++-------------------+
+| title             |
++-------------------+
+| Music audio       |
+| Music video promo |
++-------------------+
+2 rows in set (0.00 sec)
+
+
+*****9.Give the increment of Rs. 10000 to those instructor whose salary is less than 40000*****
+
+
+mysql> select * from instructor;
++---------+-----------+--------+-----------+
+| inst_id | inst_name | salary | dept_name |
++---------+-----------+--------+-----------+
+|     111 | ABC       |  65000 | Computer  |
+|     112 | PQR       |  90000 | Music     |
+|     113 | EFG       |  70000 | Physics   |
+|     114 | XYZ       |  50000 | History   |
+|     115 | LMN       |  90000 | Music     |
+|     116 | UVW       |  70000 | Physics   |
+|     117 | STU       |  55000 | Biology   |
++---------+-----------+--------+-----------+
+7 rows in set (0.00 sec)
+
+
+
+mysql> update instructor set salary=case
+    -> when salary<60000
+    -> then salary +10000
+    -> else
+    -> salary +00000
+    -> end;
+Query OK, 2 rows affected (0.17 sec)
+Rows matched: 7  Changed: 2  Warnings: 0
+
+mysql> select * from instructor;
++---------+-----------+--------+-----------+
+| inst_id | inst_name | salary | dept_name |
++---------+-----------+--------+-----------+
+|     111 | ABC       |  65000 | Computer  |
+|     112 | PQR       |  90000 | Music     |
+|     113 | EFG       |  70000 | Physics   |
+|     114 | XYZ       |  60000 | History   |
+|     115 | LMN       |  90000 | Music     |
+|     116 | UVW       |  70000 | Physics   |
+|     117 | STU       |  65000 | Biology   |
++---------+-----------+--------+-----------+
+7 rows in set (0.02 sec)
+
+
+
+*****10. Give the increment of Rs. 10000 to those instructor whose salary is less than 40000 else increment of 20000*****
+
+mysql> update instructor set salary=case
+    -> when salary<60000
+    -> then salary +10000
+    -> else
+    -> salary +20000
+    -> end;
+Query OK, 7 rows affected (0.07 sec)
+Rows matched: 7  Changed: 7  Warnings: 0
+
+
+mysql> select * from insructor;
+ERROR 1146 (42S02): Table 'university.insructor' doesn't exist
+mysql> select * from instructor;
++---------+-----------+--------+-----------+
+| inst_id | inst_name | salary | dept_name |
++---------+-----------+--------+-----------+
+|     111 | ABC       |  85000 | Computer  |
+|     112 | PQR       | 110000 | Music     |
+|     113 | EFG       |  90000 | Physics   |
+|     114 | XYZ       |  80000 | History   |
+|     115 | LMN       | 110000 | Music     |
+|     116 | UVW       |  90000 | Physics   |
+|     117 | STU       |  85000 | Biology   |
++---------+-----------+--------+-----------+
+7 rows in set (0.10 sec)
+
+
+*****11.Find names of instructor along with deptartment name and building no.*****
+
+
+mysql> select instructor.inst_name, instructor.dept_name, department.building from instructor, department where instructor.dept_name=department.dept_name;
++-----------+-----------+----------+
+| inst_name | dept_name | building |
++-----------+-----------+----------+
+| STU       | Biology   |        5 |
+| ABC       | Computer  |        1 |
+| XYZ       | History   |        4 |
+| PQR       | Music     |        2 |
+| LMN       | Music     |        2 |
+| EFG       | Physics   |        3 |
+| UVW       | Physics   |        3 |
++-----------+-----------+----------+
+7 rows in set (0.12 sec)
+
+
+*****12.Find names of instructor & course id for instructor in computer department*****
+
+
+
+mysql> select instructor.inst_name, course.course_id from instructor, course where instructor.dept_name='Computer';
++-----------+-----------+
+| inst_name | course_id |
++-----------+-----------+
+| ABC       | Bio-1     |
+| ABC       | Bio-2     |
+| ABC       | CS-1      |
+| ABC       | CS-2      |
+| ABC       | His-1     |
+| ABC       | Mu-1      |
+| ABC       | Mu-2      |
+| ABC       | Phy-2     |
++-----------+-----------+
+8 rows in set (0.02 sec)
+
+
+*****13.Find instructor who have taught some courses*****
+
+
+mysql> select instructor.inst_name from instructor, teaches where instructor.inst_id = teaches.inst_id;
++-----------+
+| inst_name |
++-----------+
+| ABC       |
+| EFG       |
+| LMN       |
+| STU       |
+| STU       |
++-----------+
+5 rows in set (0.03 sec)
+
+
+*****14.For all instructor in university who have taught some courses find name and couse_id of all courses they taught*****
+
+
+mysql> select instructor.inst_name, teaches.course_id, teaches.semester from instructor, teaches where instructor.inst_id=teaches.inst_id;
++-----------+-----------+----------+
+| inst_name | course_id | semester |
++-----------+-----------+----------+
+| STU       | Bio-1     | I        |
+| EFG       | Phy-2     | II       |
+| ABC       | CS-2      | II       |
+| STU       | Bio-2     | I        |
+| LMN       | Mu-1      | II       |
++-----------+-----------+----------+
+5 rows in set (0.10 sec)
+
+*****15.List all instructor along with title of courses that they teach*****
+
+
+mysql> select instructor.inst_name, course.title from instructor, course where instructor.dept_name=course.dept_name;
++-----------+--------------------+
+| inst_name | title              |
++-----------+--------------------+
+| ABC       | Intro to CS        |
+| ABC       | Robotics           |
+| PQR       | Music audio        |
+| PQR       | Music video promo  |
+| EFG       | Physics principles |
+| XYZ       | World History      |
+| LMN       | Music audio        |
+| LMN       | Music video promo  |
+| UVW       | Physics principles |
+| STU       | Into to bio        |
+| STU       | Genetics           |
++-----------+--------------------+
+11 rows in set (0.00 sec)
+
+
+
+*****16.Find names of all departments whose name include substring i*****
+
+
+mysql> select dept_name from department where dept_name like '%i%';
++-----------+
+| dept_name |
++-----------+
+| Biology   |
+| History   |
+| Music     |
+| Physics   |
++-----------+
+4 rows in set (0.12 sec)
+
+
+*****17.Find names of instructor whose name are exactly 3 character*****
+
+
+mysql> select dept_name from department where dept_name like '---';
+Empty set (0.00 sec)
+
+
+
+
+*****18.Find titles along with dept_name where department must end with y*****
+
+mysql> select title,dept_name from course where dept_name like '%y';
++---------------+-----------+
+| title         | dept_name |
++---------------+-----------+
+| Into to bio   | Biology   |
+| Genetics      | Biology   |
+| World History | History   |
++---------------+-----------+
+3 rows in set (0.00 sec)
+
+
+
+*****19. List all  instructor in descending order*****
+
+mysql> select * from instructor order by inst_name desc;
++---------+-----------+--------+-----------+
+| inst_id | inst_name | salary | dept_name |
++---------+-----------+--------+-----------+
+|     114 | XYZ       |  80000 | History   |
+|     116 | UVW       |  90000 | Physics   |
+|     117 | STU       |  85000 | Biology   |
+|     112 | PQR       | 110000 | Music     |
+|     115 | LMN       | 110000 | Music     |
+|     113 | EFG       |  90000 | Physics   |
+|     111 | ABC       |  85000 | Computer  |
++---------+-----------+--------+-----------+
+7 rows in set (0.02 sec)
+
+
+
+*****20.Find names of instructor with salary amount between 30000 and 50000*****
+
+mysql> select inst_name from instructor where salary between 30000 and 95000;
++-----------+
+| inst_name |
++-----------+
+| ABC       |
+| EFG       |
+| XYZ       |
+| UVW       |
+| STU       |
++-----------+
+5 rows in set (0.09 sec)
+
+*****21.show course_id, year along with the building in ascending order*****
+
+mysql> select year, course_id, building, roomno from section order by building;
++------+-----------+----------+--------+
+| year | course_id | building | roomno |
++------+-----------+----------+--------+
+| SY   | CS-1      |        1 |     11 |
+| TY   | Mu-1      |        2 |     12 |
+| TY   | Mu-2      |        2 |     12 |
+| FY   | Phy-2     |        3 |     32 |
+| SY   | CS-2      |        3 |     32 |
+| FY   | Bio-2     |        4 |     42 |
+| FY   | His-1     |        4 |     42 |
+| FY   | Bio-1     |        5 |     52 |
+| TY   | Bio-1     |        5 |     52 |
++------+-----------+----------+--------+
+9 rows in set (0.11 sec)
+
+
+*****22. Select the courses which are in FY*****
+
+mysql> select course_id from section where year='FY';
++-----------+
+| course_id |
++-----------+
+| Phy-2     |
+| Bio-2     |
+| His-1     |
+| Bio-1     |
++-----------+
+4 rows in set (0.00 sec)
+
+
+*****23. Find the courses with grade b*****
+
+
+mysql> select course_id from takes where grade='b';
++-----------+
+| course_id |
++-----------+
+| Bio-2     |
+| CS-1      |
++-----------+
+2 rows in set (0.20 sec)
+
+
+*****24.instructor id in ascending order*****
+
+
+
+mysql> select sid, inst_id from advisor order by inst_id;
++------+---------+
+| sid  | inst_id |
++------+---------+
+| s2   |     111 |
+| s1   |     112 |
+| s5   |     112 |
+| s4   |     113 |
+| s3   |     114 |
++------+---------+
+
+
+*****25. Find total number of instructors*****
+
+mysql> select count(*) as total from instructor; OR select count(inst_id) as total from instructor;
++-------+
+| total |
++-------+
+|     7 |
++-------+
+1 row in set (0.12 sec)
+
+
+*****27. List salary of each department in ascending order*****
+
+
+mysql> select salary, dept_name from instructor order by salary asc;
++--------+-----------+
+| salary | dept_name |
++--------+-----------+
+|  80000 | History   |
+|  85000 | Computer  |
+|  85000 | Biology   |
+|  90000 | Physics   |
+|  90000 | Physics   |
+| 110000 | Music     |
+| 110000 | Music     |
++--------+-----------+
+7 rows in set (0.00 sec)
+
+
+*****28. List the department names with salary greater than 85000, in ascending order*****
+
+mysql> select salary, dept_name from instructor where salary>85000 order by salary asc;
++--------+-----------+
+| salary | dept_name |
++--------+-----------+
+|  90000 | Physics   |
+|  90000 | Physics   |
+| 110000 | Music     |
+| 110000 | Music     |
++--------+-----------+
+4 rows in set (0.00 sec)
+
+
+*****29.Find the titles where 2nd letter must be e*****
+
+mysql> select title from course where title like '_e%';
++----------+
+| title    |
++----------+
+| Genetics |
++----------+
+1 row in set (0.00 sec)
+
+
+
+*****30. Find the department names which must start with letter B*****
+
+mysql> select * from course where dept_name like 'B%y';
++-----------+-------------+---------+-----------+
+| course_id | title       | credits | dept_name |
++-----------+-------------+---------+-----------+
+| Bio-1     | Into to bio |       4 | Biology   |
+| Bio-2     | Genetics    |       3 | Biology   |
++-----------+-------------+---------+-----------+
+2 rows in set (0.10 sec) 
+
+
+
+
+

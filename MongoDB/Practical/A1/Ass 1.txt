@@ -1,0 +1,429 @@
+C:\Program Files\MongoDB\Server\4.4\bin>mongo
+MongoDB shell version v4.4.1
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("e90bac9e-5b50-4f52-8d26-2d00e36f70ec") }
+MongoDB server version: 4.4.1
+---
+The server generated these startup warnings when booting:
+        2020-11-05T20:34:16.162+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+---
+---
+        Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+        metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+        The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+        and anyone you share the URL with. MongoDB may use this information to make product
+        improvements and to suggest MongoDB products and deployment options to you.
+
+        To enable free monitoring, run the following command: db.enableFreeMonitoring()
+        To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> use game
+switched to db game
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> db
+game
+> db.createCollection("player");
+{ "ok" : 1 }
+> show dbs;
+admin   0.000GB
+config  0.000GB
+game    0.000GB
+local   0.000GB
+> db.player.insert({cid:101, name:"Raina", state:"MP", strike_rate:130, status:"batsmen"});
+WriteResult({ "nInserted" : 1 })
+> db.player.find().pretty();
+{
+        "_id" : ObjectId("5fa52fcdefb98419f5102ed9"),
+        "cid" : 101,
+        "name" : "Raina",
+        "state" : "MP",
+        "strike_rate" : 130,
+        "status" : "batsmen"
+}
+> db.player.InsertMany([{cid:102, name:"bumrah", state:"rajasthan", strike_rate:100, status:"bowler"}, {cid:103, name:"pandya", state:"Gujarat", strike_rate:200, status:"allrounder"}, {cid:104, name:"Kohli", state:"WB", strike_rate:160, status:"batsman"}, {cid:104, name:"Gambhir", state:"Maharashtra", strike_rate:125, status: "batsman"}, {cid:105, name:"Rohit", state:"Maharashtra", strike_rate:150, status:"Batsman"},{cid:106, name:"Shami", state:"WB", strike_rate:95, status:"bowler"}, {cid:107, name:"Ashwin", state:"Tamilnadu", strike_rate:110, status:"allrounder"}, {cid:108, name:"Jadeja", state:"Gujarat", strike_rate:130, status:"allrounder"}, {cid:109, name:"Kumar", state:"WB", strike_rate:90, status:"bowler"}, {cid:110, name:"Zaheer", state:"Maharashtra", strike_rate:90, status:"bowler"}]);
+uncaught exception: TypeError: db.player.InsertMany is not a function :
+@(shell):1:1
+> db.player.insertMany([{cid:102, name:"bumrah", state:"rajasthan", strike_rate:100, status:"bowler"}, {cid:103, name:"pandya", state:"Gujarat", strike_rate:200, status:"allrounder"}, {cid:104, name:"Kohli", state:"WB", strike_rate:160, status:"batsman"}, {cid:104, name:"Gambhir", state:"Maharashtra", strike_rate:125, status: "batsman"}, {cid:105, name:"Rohit", state:"Maharashtra", strike_rate:150, status:"Batsman"},{cid:106, name:"Shami", state:"WB", strike_rate:95, status:"bowler"}, {cid:107, name:"Ashwin", state:"Tamilnadu", strike_rate:110, status:"allrounder"}, {cid:108, name:"Jadeja", state:"Gujarat", strike_rate:130, status:"allrounder"}, {cid:109, name:"Kumar", state:"WB", strike_rate:90, status:"bowler"}, {cid:110, name:"Zaheer", state:"Maharashtra", strike_rate:90, status:"bowler"}]);
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("5fa53bbdefb98419f5102eda"),
+                ObjectId("5fa53bbdefb98419f5102edb"),
+                ObjectId("5fa53bbdefb98419f5102edc"),
+                ObjectId("5fa53bbdefb98419f5102edd"),
+                ObjectId("5fa53bbdefb98419f5102ede"),
+                ObjectId("5fa53bbdefb98419f5102edf"),
+                ObjectId("5fa53bbdefb98419f5102ee0"),
+                ObjectId("5fa53bbdefb98419f5102ee1"),
+                ObjectId("5fa53bbdefb98419f5102ee2"),
+                ObjectId("5fa53bbdefb98419f5102ee3")
+        ]
+}
+> db.player.find();
+{ "_id" : ObjectId("5fa52fcdefb98419f5102ed9"), "cid" : 101, "name" : "Raina", "state" : "MP", "strike_rate" : 130, "status" : "batsmen" }
+{ "_id" : ObjectId("5fa53bbdefb98419f5102eda"), "cid" : 102, "name" : "bumrah", "state" : "rajasthan", "strike_rate" : 100, "status" : "bowler" }
+{ "_id" : ObjectId("5fa53bbdefb98419f5102edb"), "cid" : 103, "name" : "pandya", "state" : "Gujarat", "strike_rate" : 200, "status" : "allrounder" }
+{ "_id" : ObjectId("5fa53bbdefb98419f5102edc"), "cid" : 104, "name" : "Kohli", "state" : "WB", "strike_rate" : 160, "status" : "batsman" }
+{ "_id" : ObjectId("5fa53bbdefb98419f5102edd"), "cid" : 104, "name" : "Gambhir", "state" : "Maharashtra", "strike_rate" : 125, "status" : "batsman" }
+{ "_id" : ObjectId("5fa53bbdefb98419f5102ede"), "cid" : 105, "name" : "Rohit", "state" : "Maharashtra", "strike_rate" : 150, "status" : "Batsman" }
+{ "_id" : ObjectId("5fa53bbdefb98419f5102edf"), "cid" : 106, "name" : "Shami", "state" : "WB", "strike_rate" : 95, "status" : "bowler" }
+{ "_id" : ObjectId("5fa53bbdefb98419f5102ee0"), "cid" : 107, "name" : "Ashwin", "state" : "Tamilnadu", "strike_rate" : 110, "status" : "allrounder" }
+{ "_id" : ObjectId("5fa53bbdefb98419f5102ee1"), "cid" : 108, "name" : "Jadeja", "state" : "Gujarat", "strike_rate" : 130, "status" : "allrounder" }
+{ "_id" : ObjectId("5fa53bbdefb98419f5102ee2"), "cid" : 109, "name" : "Kumar", "state" : "WB", "strike_rate" : 90, "status" : "bowler" }
+{ "_id" : ObjectId("5fa53bbdefb98419f5102ee3"), "cid" : 110, "name" : "Zaheer", "state" : "Maharashtra", "strike_rate" : 90, "status" : "bowler" }
+> db.player.find().pretty();
+{
+        "_id" : ObjectId("5fa52fcdefb98419f5102ed9"),
+        "cid" : 101,
+        "name" : "Raina",
+        "state" : "MP",
+        "strike_rate" : 130,
+        "status" : "batsmen"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102eda"),
+        "cid" : 102,
+        "name" : "bumrah",
+        "state" : "rajasthan",
+        "strike_rate" : 100,
+        "status" : "bowler"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edb"),
+        "cid" : 103,
+        "name" : "pandya",
+        "state" : "Gujarat",
+        "strike_rate" : 200,
+        "status" : "allrounder"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edc"),
+        "cid" : 104,
+        "name" : "Kohli",
+        "state" : "WB",
+        "strike_rate" : 160,
+        "status" : "batsman"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edd"),
+        "cid" : 104,
+        "name" : "Gambhir",
+        "state" : "Maharashtra",
+        "strike_rate" : 125,
+        "status" : "batsman"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102ede"),
+        "cid" : 105,
+        "name" : "Rohit",
+        "state" : "Maharashtra",
+        "strike_rate" : 150,
+        "status" : "Batsman"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edf"),
+        "cid" : 106,
+        "name" : "Shami",
+        "state" : "WB",
+        "strike_rate" : 95,
+        "status" : "bowler"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102ee0"),
+        "cid" : 107,
+        "name" : "Ashwin",
+        "state" : "Tamilnadu",
+        "strike_rate" : 110,
+        "status" : "allrounder"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102ee1"),
+        "cid" : 108,
+        "name" : "Jadeja",
+        "state" : "Gujarat",
+        "strike_rate" : 130,
+        "status" : "allrounder"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102ee2"),
+        "cid" : 109,
+        "name" : "Kumar",
+        "state" : "WB",
+        "strike_rate" : 90,
+        "status" : "bowler"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102ee3"),
+        "cid" : 110,
+        "name" : "Zaheer",
+        "state" : "Maharashtra",
+        "strike_rate" : 90,
+        "status" : "bowler"
+}
+> db.player.update({cid:101},{$set:{status:"allrounder"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.player.find({cid:101}).pretty();
+{
+        "_id" : ObjectId("5fa52fcdefb98419f5102ed9"),
+        "cid" : 101,
+        "name" : "Raina",
+        "state" : "MP",
+        "strike_rate" : 130,
+        "status" : "allrounder"
+}
+> db.player.update({sid:104},{$set:{state:"Delhi"}});
+WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
+> db.player.find({cid:104}).pretty();
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edc"),
+        "cid" : 104,
+        "name" : "Kohli",
+        "state" : "WB",
+        "strike_rate" : 160,
+        "status" : "batsman"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edd"),
+        "cid" : 104,
+        "name" : "Gambhir",
+        "state" : "Maharashtra",
+        "strike_rate" : 125,
+        "status" : "batsman"
+}
+> db.player.update({cid:104},{$set:{state:"Delhi"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.player.find({cid:104}).pretty();
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edc"),
+        "cid" : 104,
+        "name" : "Kohli",
+        "state" : "Delhi",
+        "strike_rate" : 160,
+        "status" : "batsman"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edd"),
+        "cid" : 104,
+        "name" : "Gambhir",
+        "state" : "Maharashtra",
+        "strike_rate" : 125,
+        "status" : "batsman"
+}
+> db.player.update({cid:104},{$set:{state:"Delhi"}}, {multi:true});
+WriteResult({ "nMatched" : 2, "nUpserted" : 0, "nModified" : 1 })
+> db.player.find({cid:104}).pretty();
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edc"),
+        "cid" : 104,
+        "name" : "Kohli",
+        "state" : "Delhi",
+        "strike_rate" : 160,
+        "status" : "batsman"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edd"),
+        "cid" : 104,
+        "name" : "Gambhir",
+        "state" : "Delhi",
+        "strike_rate" : 125,
+        "status" : "batsman"
+}
+> db.player.update({cid:111},{$set:{"name.fname":"Sachin"}},{upset:true});
+WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
+> db.player.update({cid:111},{$set:{"name":"Sachin"}},{upset:true});
+WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
+> db.player.find(cid:111).pretty();
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:18
+> db.player.update({cid:111},{$set:{"name.fname":"Sachin"}},{upsert:true});
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 1,
+        "nModified" : 0,
+        "_id" : ObjectId("5fa5418912c2160c4f3e81de")
+})
+> db.player.find(cid:111).pretty();
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:18
+> db.player.find({cid:111}).pretty();
+{
+        "_id" : ObjectId("5fa5418912c2160c4f3e81de"),
+        "cid" : 111,
+        "name" : {
+                "fname" : "Sachin"
+        }
+}
+> db.player.update({cid:103},{$set:{"name.fname":"Hardik"}, {"name.fname":"Pandya"}},{upsert:true});
+uncaught exception: SyntaxError: expected property name, got '{' :
+@(shell):1:58
+> db.player.update({cid:103},{$set:{"name.fname":"Hardik"}},{upsert:true});
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 0,
+        "nModified" : 0,
+        "writeError" : {
+                "code" : 28,
+                "errmsg" : "Cannot create field 'fname' in element {name: \"pandya\"}"
+        }
+})
+> db.player.find().sort({cid:-1}).pretty()
+{
+        "_id" : ObjectId("5fa5418912c2160c4f3e81de"),
+        "cid" : 111,
+        "name" : {
+                "fname" : "Sachin"
+        }
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102ee3"),
+        "cid" : 110,
+        "name" : "Zaheer",
+        "state" : "Maharashtra",
+        "strike_rate" : 90,
+        "status" : "bowler"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102ee2"),
+        "cid" : 109,
+        "name" : "Kumar",
+        "state" : "WB",
+        "strike_rate" : 90,
+        "status" : "bowler"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102ee1"),
+        "cid" : 108,
+        "name" : "Jadeja",
+        "state" : "Gujarat",
+        "strike_rate" : 130,
+        "status" : "allrounder"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102ee0"),
+        "cid" : 107,
+        "name" : "Ashwin",
+        "state" : "Tamilnadu",
+        "strike_rate" : 110,
+        "status" : "allrounder"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edf"),
+        "cid" : 106,
+        "name" : "Shami",
+        "state" : "WB",
+        "strike_rate" : 95,
+        "status" : "bowler"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102ede"),
+        "cid" : 105,
+        "name" : "Rohit",
+        "state" : "Maharashtra",
+        "strike_rate" : 150,
+        "status" : "Batsman"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edc"),
+        "cid" : 104,
+        "name" : "Kohli",
+        "state" : "Delhi",
+        "strike_rate" : 160,
+        "status" : "batsman"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edd"),
+        "cid" : 104,
+        "name" : "Gambhir",
+        "state" : "Delhi",
+        "strike_rate" : 125,
+        "status" : "batsman"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edb"),
+        "cid" : 103,
+        "name" : "pandya",
+        "state" : "Gujarat",
+        "strike_rate" : 200,
+        "status" : "allrounder"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102eda"),
+        "cid" : 102,
+        "name" : "bumrah",
+        "state" : "rajasthan",
+        "strike_rate" : 100,
+        "status" : "bowler"
+}
+{
+        "_id" : ObjectId("5fa52fcdefb98419f5102ed9"),
+        "cid" : 101,
+        "name" : "Raina",
+        "state" : "MP",
+        "strike_rate" : 130,
+        "status" : "allrounder"
+}
+> db.player.find({$or:[{strike_rate:{$lt:100}},{status:"bowler"}]}).pretty()
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102eda"),
+        "cid" : 102,
+        "name" : "bumrah",
+        "state" : "rajasthan",
+        "strike_rate" : 100,
+        "status" : "bowler"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102edf"),
+        "cid" : 106,
+        "name" : "Shami",
+        "state" : "WB",
+        "strike_rate" : 95,
+        "status" : "bowler"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102ee2"),
+        "cid" : 109,
+        "name" : "Kumar",
+        "state" : "WB",
+        "strike_rate" : 90,
+        "status" : "bowler"
+}
+{
+        "_id" : ObjectId("5fa53bbdefb98419f5102ee3"),
+        "cid" : 110,
+        "name" : "Zaheer",
+        "state" : "Maharashtra",
+        "strike_rate" : 90,
+        "status" : "bowler"
+}
+> db.player.update({cid:103},{$set:{"name.fname":"Hardik", "name.fname":"Pandya"}},{upsert:true});
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 0,
+        "nModified" : 0,
+        "writeError" : {
+                "code" : 28,
+                "errmsg" : "Cannot create field 'fname' in element {name: \"pandya\"}"
+        }
+})
+> db.player.update({cid:111},{$set:{"name.lname":"Tendulkar", strike_rate:140, state:"Maharashtra"}},{upsert:true});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.player.find({cid:111}).pretty();
+{
+        "_id" : ObjectId("5fa5418912c2160c4f3e81de"),
+        "cid" : 111,
+        "name" : {
+                "fname" : "Sachin",
+                "lname" : "Tendulkar"
+        },
+        "state" : "Maharashtra",
+        "strike_rate" : 140
+}
+>

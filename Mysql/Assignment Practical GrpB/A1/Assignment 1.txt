@@ -1,0 +1,413 @@
+GROUP : B
+	NAME:	Anushka M Mulay
+	ROLL NO: 35040
+	BATCH:	B 
+	CLASS:  TE(IT)-A
+	STATEMENT: 1.Design any database with atleast 3 entities and relationships between them.Apply DCL and DDL commands. 
+		   Draw suitable ER/EER diagram for the system.
+
+
+
+//DDL
+
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database university;
+Query OK, 1 row affected (0.31 sec)
+
+mysql> use university;
+Database changed
+mysql> create table department(dept_name varchar(20) primary key, building integer, budget integer);
+Query OK, 0 rows affected (1.89 sec)
+
+mysql> desc departmant;
+ERROR 1146 (42S02): Table 'university.departmant' doesn't exist
+mysql> desc department;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| dept_name | varchar(20) | NO   | PRI | NULL    |       |
+| building  | int         | YES  |     | NULL    |       |
+| budget    | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.14 sec)
+
+
+
+
+mysql> create table instructor(inst_id integer primary key, inst_name varchar(20), salary integer, dept_name varchar(20), foreign key(dept_name) references department (dept_name));
+Query OK, 0 rows affected (1.56 sec)
+
+mysql> desc instructor;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| inst_id   | int         | NO   | PRI | NULL    |       |
+| inst_name | varchar(20) | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
+| dept_name | varchar(20) | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.10 sec)
+
+mysql> alter table instructor add join_date date;
+Query OK, 0 rows affected (0.35 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+mysql> desc instructor;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| inst_id   | int         | NO   | PRI | NULL    |       |
+| inst_name | varchar(20) | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
+| dept_name | varchar(20) | YES  | MUL | NULL    |       |
+| join_date | date        | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+5 rows in set (0.07 sec)
+
+
+mysql> alter table instructor drop column join_date;
+Query OK, 0 rows affected
+Records: 0   Duplicates: 0  Warnings: 0
+
+mysql> desc instructor;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| inst_id   | int         | NO   | PRI | NULL    |       |
+| inst_name | varchar(20) | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
+| dept_name | varchar(20) | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+5 rows in set (0.07 sec)
+
+
+
+mysql> create table student( sid varchar(20) primary key, sname varchar(20), tot_credits int, dept_name varchar(20), foreign key(dept_name) references department(dept_name));
+Query OK, 0 rows affected (0.70 sec)
+
+mysql> desc student;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| sid         | varchar(20) | NO   | PRI | NULL    |       |
+| sname       | varchar(20) | YES  |     | NULL    |       |
+| tot_credits | int         | YES  |     | NULL    |       |
+| dept_name   | varchar(20) | YES  | MUL | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.04 sec)
+
+
+
+
+mysql> create table classroom(building int, roomno int, capacity int, primary key(building, roomno));
+Query OK, 0 rows affected (0.79 sec)
+
+mysql> desc classroom;
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| building | int  | NO   | PRI | NULL    |       |
+| roomno   | int  | NO   | PRI | NULL    |       |
+| capacity | int  | YES  |     | NULL    |       |
++----------+------+------+-----+---------+-------+
+3 rows in set (0.11 sec)
+
+
+
+mysql> create table course(course_id varchar(10) primary key, title varchar(20), credits int, dept_name varchar(10), foreign key(dept_name) references department(dept_name));
+Query OK, 0 rows affected (1.44 sec)
+
+mysql> desc course;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| course_id | varchar(10) | NO   | PRI | NULL    |       |
+| title     | varchar(20) | YES  |     | NULL    |       |
+| credits   | int         | YES  |     | NULL    |       |
+| dept_name | varchar(10) | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+
+
+
+mysql> create table time_slot(tid varchar(20) primary key, day varchar(20), starttime varchar(20), endtime varchar(20));
+Query OK, 0 rows affected (2.21 sec)
+
+mysql> desc time_slot;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| tid       | varchar(20) | NO   | PRI | NULL    |       |
+| day       | varchar(20) | YES  |     | NULL    |       |
+| starttime | varchar(20) | YES  |     | NULL    |       |
+| endtime   | varchar(20) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.02 sec)
+
+
+
+mysql> create table advisor(sid varchar(20), foreign key (sid) references student(sid), inst_id int, foreign key(inst_id) references instructor(inst_id));
+Query OK, 0 rows affected (1.49 sec)
+
+
+
+mysql> desc advisor;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| sid     | varchar(20) | YES  | MUL | NULL    |       |
+| inst_id | int         | YES  | MUL | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> create table section (sec_id varchar(10), semester varchar(10), year varchar(10), course_id varchar(10), foreign key(course_id) references course(course_id), tid varchar(20), foreign key(tid) references time_slot(tid), building int, roomno int, foreign key(building, roomno) references classroom(building, roomno), primary key(sec_id, semester, year,course_id));
+Query OK, 0 rows affected (1.88 sec)
+
+mysql> desc section;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| sec_id    | varchar(10) | NO   | PRI | NULL    |       |
+| semester  | varchar(10) | NO   | PRI | NULL    |       |
+| year      | varchar(10) | NO   | PRI | NULL    |       |
+| course_id | varchar(10) | NO   | PRI | NULL    |       |
+| tid       | varchar(20) | YES  | MUL | NULL    |       |
+| building  | int         | YES  | MUL | NULL    |       |
+| roomno    | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+7 rows in set (0.02 sec)
+
+
+mysql> create table takes( sid varchar(10), foreign key (sid) references student (sid), sec_id varchar(10), semester varchar(10), year varchar(10), course_id varchar(20),foreign key (sec_id, semester, year, course_id) references section (sec_id, semester, year, course_id), grade varchar(10), primary key(sid, sec_id, semester, year, course_id));
+Query OK, 0 rows affected (1.37 sec)
+
+mysql> desc takes;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| sid       | varchar(10) | NO   | PRI | NULL    |       |
+| sec_id    | varchar(10) | NO   | PRI | NULL    |       |
+| semester  | varchar(10) | NO   | PRI | NULL    |       |
+| year      | varchar(10) | NO   | PRI | NULL    |       |
+| course_id | varchar(20) | NO   | PRI | NULL    |       |
+| grade     | varchar(10) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+6 rows in set (0.12 sec)
+
+ 
+mysql> create table teaches( inst_id int, foreign key(inst_id) references instructor(inst_id), course_id varchar(20), foreign key(course_id) references course (course_id), sec_id varchar(10), semester varchar(10), year varchar(10), foreign key(sec_id, semester, year) references section(sec_id, semester, year));
+Query OK, 0 rows affected (2.59 sec)
+
+mysql> desc teaches;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| inst_id   | int         | YES  | MUL | NULL    |       |
+| course_id | varchar(20) | YES  | MUL | NULL    |       |
+| sec_id    | varchar(10) | YES  | MUL | NULL    |       |
+| semester  | varchar(10) | YES  |     | NULL    |       |
+| year      | varchar(10) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+
+
+mysql> show tables;
++----------------------+
+| Tables_in_university |
++----------------------+
+| advisor              |
+| classroom            |
+| course               |
+| department           |
+| instructor           |
+| section              |
+| student              |
+| takes                |
+| teaches              |
+| time_slot            |
++----------------------+
+10 rows in set (0.15 sec)
+
+
+
+
+//DCL
+
+
+
+Microsoft Windows [Version 10.0.19041.508]
+(c) 2020 Microsoft Corporation. All rights reserved.
+
+C:\Users\user>C:\Program Files\MySQL\MySQL Server 8.0\bin
+'C:\Program' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\user>cd C:\Program Files\MySQL\MySQL Server 8.0\bin
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 20
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases
+    -> ;
++--------------------+
+| Database           |
++--------------------+
+| bank               |
+| college            |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| university         |
++--------------------+
+7 rows in set (0.10 sec)
+
+mysql> use bank;
+Database changed
+mysql> grant insert,update, select on customer to root1;
+Query OK, 0 rows affected (0.26 sec)
+
+mysql> quit
+Bye
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root1 -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 21
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use bank;
+Database changed
+mysql> insert into customer(ssn, lname, fname, city) values (10, 'X', 'Y', 'Delhi');
+Query OK, 1 row affected (0.10 sec)
+
+mysql> select * from customer;
++-----+-------+-------+---------+------------+
+| ssn | fname | lname | city    | dob        |
++-----+-------+-------+---------+------------+
+|   1 | A     | B     | Pune    | 2000-01-01 |
+|   2 | C     | D     | Mumbai  | 1990-03-03 |
+|   3 | E     | F     | kolkata | 1995-12-21 |
+|  10 | Y     | X     | Delhi   | NULL       |
++-----+-------+-------+---------+------------+
+4 rows in set (0.00 sec)
+
+mysql> quit
+Bye
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 22
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> revoke insert on customer from root1;
+ERROR 1046 (3D000): No database selected
+mysql> use bank;
+Database changed
+mysql> revoke insert on customer from root1;
+Query OK, 0 rows affected (0.20 sec)
+
+mysql> insert into customer(ssn, lname, fname, city) values (11, 'X', 'Y', 'NewDelhi');
+Query OK, 1 row affected (0.25 sec)
+
+mysql> delete from customer where snn=11;
+ERROR 1054 (42S22): Unknown column 'snn' in 'where clause'
+mysql> delete from customer where ssn=11;
+Query OK, 1 row affected (0.18 sec)
+
+mysql> quit
+Bye
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root1 -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 23
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use bank;
+Database changed
+mysql> revoke insert on customer from root1;
+ERROR 1142 (42000): INSERT, GRANT command denied to user 'root1'@'localhost' for table 'customer'
+mysql> update customer set join_date="2005-11-11" where ssn=10;
+ERROR 1054 (42S22): Unknown column 'join_date' in 'field list'
+mysql> update customer set dob="2005-11-11" where ssn=10;
+Query OK, 1 row affected (0.10 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from customer;
++-----+-------+-------+---------+------------+
+| ssn | fname | lname | city    | dob        |
++-----+-------+-------+---------+------------+
+|   1 | A     | B     | Pune    | 2000-01-01 |
+|   2 | C     | D     | Mumbai  | 1990-03-03 |
+|   3 | E     | F     | kolkata | 1995-12-21 |
+|  10 | Y     | X     | Delhi   | 2005-11-11 |
++-----+-------+-------+---------+------------+
+4 rows in set (0.10 sec)
+
+mysql> select user from mysql.user;
++------------------+
+| user             |
++------------------+
+| root1            |
+| mysql.infoschema |
+| mysql.session    |
+| mysql.sys        |
+| root             |
++------------------+
+5 rows in set (0.14 sec)
+
+
+Conclusion : Thus, we have designed database and applied DCL and DDL commands. 
+
