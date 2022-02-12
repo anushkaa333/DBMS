@@ -1,0 +1,731 @@
+Microsoft Windows [Version 10.0.19041.928]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\user>cd C:\Program Files\MongoDB\Server\4.4\bin
+
+C:\Program Files\MongoDB\Server\4.4\bin>mongo
+MongoDB shell version v4.4.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("ba67f13d-9beb-44c2-b87d-c307afe1c57c") }
+MongoDB server version: 4.4.6
+---
+The server generated these startup warnings when booting:
+        2021-05-12T22:27:15.683+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+---
+---
+        Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+        metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+        The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+        and anyone you share the URL with. MongoDB may use this information to make product
+        improvements and to suggest MongoDB products and deployment options to you.
+
+        To enable free monitoring, run the following command: db.enableFreeMonitoring()
+        To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> db mydb
+uncaught exception: SyntaxError: unexpected token: identifier :
+@(shell):1:3
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> use mydb
+switched to db mydb
+> db mydb
+uncaught exception: SyntaxError: unexpected token: identifier :
+@(shell):1:3
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> db
+mydb
+> db.createcollection("account")
+uncaught exception: TypeError: db.createcollection is not a function :
+@(shell):1:1
+> db.createcollection("account");
+uncaught exception: TypeError: db.createcollection is not a function :
+@(shell):1:1
+> db.createCollection("account");
+{ "ok" : 1 }
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+mydb    0.000GB
+> db.account.insert({a_no:1, name:"A", address:"Pune",p_no:9978, balance: 1000});
+WriteResult({ "nInserted" : 1 })
+> db.account.insertMany([{a_no:2, name:{fname:"B", lname:"c"}, address:"Mumbai",p_no:9478, balance: 2000},{a_no:3, name:"D", address:"nashik", p_no:[8275,8273], balance:3000}]);
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("609d68674a692a2a5ca023ba"),
+                ObjectId("609d68674a692a2a5ca023bb")
+        ]
+}
+> db.account.find();
+{ "_id" : ObjectId("609d67124a692a2a5ca023b9"), "a_no" : 1, "name" : "A", "address" : "Pune", "p_no" : 9978, "balance" : 1000 }
+{ "_id" : ObjectId("609d68674a692a2a5ca023ba"), "a_no" : 2, "name" : { "fname" : "B", "lname" : "c" }, "address" : "Mumbai", "p_no" : 9478, "balance" : 2000 }
+{ "_id" : ObjectId("609d68674a692a2a5ca023bb"), "a_no" : 3, "name" : "D", "address" : "nashik", "p_no" : [ 8275, 8273 ], "balance" : 3000 }
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "A",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : 9478,
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "nashik",
+        "p_no" : [
+                8275,
+                8273
+        ],
+        "balance" : 3000
+}
+> db.account.update({a_no:1},{$set:{name:"AB"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.account.update({a_no:2}, {$set:{p_no:[7527,9478,2731]}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "AB",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "nashik",
+        "p_no" : [
+                8275,
+                8273
+        ],
+        "balance" : 3000
+}
+> db.account.update({a_no:3}, {$set:{p_no:[752,947,273]}}, {upsert:true});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "AB",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "nashik",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+> db.account.insert({a_no:3, name:"E", address:"chennai", p_no:null, balance:4000});
+WriteResult({ "nInserted" : 1 })
+> db.account.find(a_no:3).pretty();
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:20
+> db.account.find({a_no:3}).pretty();
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "nashik",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "chennai",
+        "p_no" : null,
+        "balance" : 4000
+}
+> db.account.update(0
+...
+... db.account.find(a_no:3).pretty();
+...
+...
+> db.account.update({a_no:3}, {$set:{address:"Nagpur"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.account.find({a_no:3}).pretty();
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "chennai",
+        "p_no" : null,
+        "balance" : 4000
+}
+> db.account.update({a_no:3}, {$set:{address:"Nagpur"}}, {multi:true});
+WriteResult({ "nMatched" : 2, "nUpserted" : 0, "nModified" : 1 })
+> db.account.find({a_no:3}).pretty();
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "Nagpur",
+        "p_no" : null,
+        "balance" : 4000
+}
+> db.account.update({a_no:3, name:"E"}, {$set:{address:"Nag"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.account.find({a_no:3}).pretty();
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "Nag",
+        "p_no" : null,
+        "balance" : 4000
+}
+> db.account.find().sort({name:-1}).pretty();
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "Nag",
+        "p_no" : null,
+        "balance" : 4000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "AB",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+> db.account.find().sort({balance:1}).pretty();
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "AB",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "Nag",
+        "p_no" : null,
+        "balance" : 4000
+}
+> db.account.find({$balance:{$lt:2000}}).pretty();
+Error: error: {
+        "ok" : 0,
+        "errmsg" : "unknown top level operator: $balance",
+        "code" : 2,
+        "codeName" : "BadValue"
+}
+> db.account.find({balance:{$lt:2000}}).pretty();
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "AB",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+> db.account.find({$or:[{balance:{$lte:2000}}, {address:"pune"}]}).pretty();\
+uncaught exception: SyntaxError: invalid escape sequence :
+@(shell):1:74
+> db.account.find({$or:[{balance:{$lte:2000}}, {address:"pune"}]}).pretty();
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "AB",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+> db.account.find({$and:[{balance:{$lte:2000}},{address:"pune"}}).pretty();
+...
+...
+> db.account.find({$or:[{balance:{$lte:2000}}, {address:"pune"}]}).pretty();
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "AB",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+> db.account.find({$and:[{balance:{$lte:2000}}, {address:"pune"}]}).pretty();\
+uncaught exception: SyntaxError: invalid escape sequence :
+@(shell):1:75
+> db.account.find({$and:[{balance:{$lte:2000}}, {address:"pune"}]}).pretty();
+> db.account.find({$and:[{balance:{$lte:2000}}, {address:"pune"}]}).pretty();
+>
+>
+>
+>
+>
+>
+> db.account.find({$or:[{balance:{$lte:2000}}, {address:"pune"}]}).pretty();
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "AB",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+> db.account.find({$and :[{balance:{$lte:2000}}, {address:"pune"}]}).pretty();
+> db.account.find({$and :[{balance:{$lt:2000}}, {address:"pune"}]}).pretty();
+> db.account.find({$and :[{balance:{$gt:2000}}, {address:"pune"}]}).pretty();
+> db.account.find({$and :[{balance:{$gt:2000}}, {address:"mumbai"}]}).pretty();
+> db.account.find({$or :[{balance:{$gt:2000}}, {address:"mumbai"}]}).pretty();
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "Nag",
+        "p_no" : null,
+        "balance" : 4000
+}
+> db.account.find({$or :[{balance:{$gte:2000}}, {address:"mumbai"}]}).pretty();
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "Nag",
+        "p_no" : null,
+        "balance" : 4000
+}
+> db.account.find({$and :[{balance:{$gte:2000}}, {address:"mumbai"}]}).pretty();
+> db.account.find({$and:[{balance:{$gte:3000}},{name:"D"}]}).pretty();
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+> db.account.find({$and :[{balance:{$gte:2000}}, {address:"mumbai"}]}).pretty();
+> db.account.find({$and :[{balance:{$gte:1000}}, {address:"mumbai"}]}).pretty();
+> db.account.find({$or:[{balance:{$ne:3000}},{name:"D"}]}).pretty();
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "AB",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "Nag",
+        "p_no" : null,
+        "balance" : 4000
+}
+> db.account.update({a_no:5, balance:5000}, {$set:{name:"ED"}}, {upsert:true});
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 1,
+        "nModified" : 0,
+        "_id" : ObjectId("609d7a9780bf6ebd87ebfc55")
+})
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "AB",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "Nag",
+        "p_no" : null,
+        "balance" : 4000
+}
+{
+        "_id" : ObjectId("609d7a9780bf6ebd87ebfc55"),
+        "a_no" : 5,
+        "balance" : 5000,
+        "name" : "ED"
+}
+> db.account.find({name:"E"}).pretty();
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "Nag",
+        "p_no" : null,
+        "balance" : 4000
+}
+> db.account.find({name.fname:"b"}).pretty();
+uncaught exception: SyntaxError: missing : after property id :
+@(shell):1:21
+> db.account.find({name.fname:"B"}).pretty();
+uncaught exception: SyntaxError: missing : after property id :
+@(shell):1:21
+> db.account.find({"name.fname":"B"}).pretty();
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+> db.account.remove({a_no:5});
+WriteResult({ "nRemoved" : 1 })
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "AB",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "Nag",
+        "p_no" : null,
+        "balance" : 4000
+}
+>

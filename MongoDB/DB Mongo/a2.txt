@@ -1,0 +1,660 @@
+Microsoft Windows [Version 10.0.19041.928]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\user>cd C:\Program Files\MongoDB\Server\4.4\bin
+
+C:\Program Files\MongoDB\Server\4.4\bin>mongo
+MongoDB shell version v4.4.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("fd5f9a0d-56d6-40cc-9521-99b8a1f1dfd9") }
+MongoDB server version: 4.4.6
+---
+The server generated these startup warnings when booting:
+        2021-05-12T22:27:15.683+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+---
+---
+        Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+        metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+        The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+        and anyone you share the URL with. MongoDB may use this information to make product
+        improvements and to suggest MongoDB products and deployment options to you.
+
+        To enable free monitoring, run the following command: db.enableFreeMonitoring()
+        To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+mydb    0.000GB
+> use mydb
+switched to db mydb
+> db.createCollection("staff");
+{ "ok" : 1 }
+> db.staff.insert({eid:100, ename:"P", salary:40000});
+WriteResult({ "nInserted" : 1 })
+> db.staff.insertMany([{eid:102, ename:"R", salary:40000},{eid:101, ename:"Q", salary:50000}, {eid:102, ename:{"fname":"S", "lname":"T"}, salary:60000}, {eid:103, ename:"U", salary:70000}]);
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("609e76797ec59127f4453884"),
+                ObjectId("609e76797ec59127f4453885"),
+                ObjectId("609e76797ec59127f4453886"),
+                ObjectId("609e76797ec59127f4453887")
+        ]
+}
+> db.staff.find();
+{ "_id" : ObjectId("609e755a7ec59127f4453883"), "eid" : 100, "ename" : "P", "salary" : 40000 }
+{ "_id" : ObjectId("609e76797ec59127f4453884"), "eid" : 102, "ename" : "R", "salary" : 40000 }
+{ "_id" : ObjectId("609e76797ec59127f4453885"), "eid" : 101, "ename" : "Q", "salary" : 50000 }
+{ "_id" : ObjectId("609e76797ec59127f4453886"), "eid" : 102, "ename" : { "fname" : "S", "lname" : "T" }, "salary" : 60000 }
+{ "_id" : ObjectId("609e76797ec59127f4453887"), "eid" : 103, "ename" : "U", "salary" : 70000 }
+> db.staff.find().pretty();
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453885"),
+        "eid" : 101,
+        "ename" : "Q",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453887"),
+        "eid" : 103,
+        "ename" : "U",
+        "salary" : 70000
+}
+> db.staff.find({eid:103}).pretty();
+{
+        "_id" : ObjectId("609e76797ec59127f4453887"),
+        "eid" : 103,
+        "ename" : "U",
+        "salary" : 70000
+}
+> db.staff.find({eid:102}).pretty();
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+> db.staff.find({"name.fname":"S"}).pretty();
+> db.staff.find({"ename.fname":"S"}).pretty();
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+> db.staff.find({salary:40000}).pretty()
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+> db.staff.find({eid:{$lte:103}}).pretty();
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453885"),
+        "eid" : 101,
+        "ename" : "Q",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453887"),
+        "eid" : 103,
+        "ename" : "U",
+        "salary" : 70000
+}
+> db.staff.find({salary:{$gt:50000}}).pretty();
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453887"),
+        "eid" : 103,
+        "ename" : "U",
+        "salary" : 70000
+}
+> db.staff.find({eid:{$in:[103,101]}}).pretty();
+{
+        "_id" : ObjectId("609e76797ec59127f4453885"),
+        "eid" : 101,
+        "ename" : "Q",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453887"),
+        "eid" : 103,
+        "ename" : "U",
+        "salary" : 70000
+}
+> db.staff.find({eid:{$nin:[103]}}).pretty();
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453885"),
+        "eid" : 101,
+        "ename" : "Q",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+> db.staff.find({$and:[{eid:102},{"ename.fname":"S"}]}).pretty();
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+> db.staff.find({$or:[{eid:102},{"ename.fname":"S"}]}).pretty();
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+> db.staff.find({$nor:[{eid:103},{"ename.lname":"T"}]}).pretty();
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453885"),
+        "eid" : 101,
+        "ename" : "Q",
+        "salary" : 50000
+}
+> db.staff.find({eid:{$gt:102}}).pretty();
+{
+        "_id" : ObjectId("609e76797ec59127f4453887"),
+        "eid" : 103,
+        "ename" : "U",
+        "salary" : 70000
+}
+> db.staff.find({$or:[{salary:{$gt:60000}},{ename:"P"}]}).pretty()
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453887"),
+        "eid" : 103,
+        "ename" : "U",
+        "salary" : 70000
+}
+> db.staff.find({$and:[{salary:{$not:{$lt:40000}}},{eid:{$nin:103}}]}).pretty();
+Error: error doing query: failed: network error while attempting to run command 'find' on host '127.0.0.1:27017'
+> db.staff.find({$and:[{salary:{$not:{$lt:40000}}},{eid:{$nin:101}}]}).pretty();
+Error: error: {
+        "ok" : 0,
+        "errmsg" : "$nin needs an array",
+        "code" : 2,
+        "codeName" : "BadValue"
+}
+> db.staff.find({$and:[{salary:{$not:{$lt:40000}}},{eid:{$nin:[103]}}]}).pretty();
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453885"),
+        "eid" : 101,
+        "ename" : "Q",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+> db.staff.find({$and:[{salary:{$not:{$gt:40000}}}, {eid:{$nin:[102]}}]});
+{ "_id" : ObjectId("609e755a7ec59127f4453883"), "eid" : 100, "ename" : "P", "salary" : 40000 }
+> db.staff.find({$and:[{salary:{$not:{$gt:40000}}}, {eid:{$nin:[102]}}]}).pretty();
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+> db.staff.find({$and:[{salary:{$gt:30000}},{salary:{$lt:70000}}]}).pretty();
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453885"),
+        "eid" : 101,
+        "ename" : "Q",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+> db.staff.find({eid:{$not:{$gt:40000}}}).pretty();
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453885"),
+        "eid" : 101,
+        "ename" : "Q",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453887"),
+        "eid" : 103,
+        "ename" : "U",
+        "salary" : 70000
+}
+> db.staff.find({eid:{$not:{$gt:101}}}).pretty();
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453885"),
+        "eid" : 101,
+        "ename" : "Q",
+        "salary" : 50000
+}
+> db.staff.find({$and:[{eid:102},{ename:{$ne:"R"}}]}).pretty();
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+> db.staff.find().sort({salary:1}).pretty();
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453885"),
+        "eid" : 101,
+        "ename" : "Q",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453887"),
+        "eid" : 103,
+        "ename" : "U",
+        "salary" : 70000
+}
+> db.staff.update({eid:106}, {$set:{ename:"X", salary:80000}}).pretty();
+uncaught exception: TypeError: db.staff.update(...).pretty is not a function :
+@(shell):1:1
+> db.staff.update({eid:106}, {$set:{ename:"X", salary:80000}}, {multi:true}).pretty();
+uncaught exception: TypeError: db.staff.update(...).pretty is not a function :
+@(shell):1:1
+> db.staff.update({eid:106}, {$set:{ename:"X", salary:80000}}, {multi:true});
+WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
+> db.staff.update({eid:106}, {$set:{ename:"X", salary:80000}}, {upsert:true});
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 1,
+        "nModified" : 0,
+        "_id" : ObjectId("609ebab980bf6ebd87ebfd80")
+})
+> db.staff.update({eid:107}, {$set:{ename:"y"}, {salary:90000}}, {upsert:true});
+uncaught exception: SyntaxError: expected property name, got '{' :
+@(shell):1:46
+> db.staff.update({eid:107}, {$set:{ename:"Geeta"}});
+WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
+> db.staff.find({eid:107}).pretty();
+> db.staff.find().pretty();
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453885"),
+        "eid" : 101,
+        "ename" : "Q",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453887"),
+        "eid" : 103,
+        "ename" : "U",
+        "salary" : 70000
+}
+{
+        "_id" : ObjectId("609ebab980bf6ebd87ebfd80"),
+        "eid" : 106,
+        "ename" : "X",
+        "salary" : 80000
+}
+> db.staff.update({eid:107}, {$set:{ename:"y", salary:90000}}, {upsert:true});
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 1,
+        "nModified" : 0,
+        "_id" : ObjectId("609ebc5d80bf6ebd87ebfd8e")
+})
+> db.staff.find().pretty();
+{
+        "_id" : ObjectId("609e755a7ec59127f4453883"),
+        "eid" : 100,
+        "ename" : "P",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453884"),
+        "eid" : 102,
+        "ename" : "R",
+        "salary" : 40000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453885"),
+        "eid" : 101,
+        "ename" : "Q",
+        "salary" : 50000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453886"),
+        "eid" : 102,
+        "ename" : {
+                "fname" : "S",
+                "lname" : "T"
+        },
+        "salary" : 60000
+}
+{
+        "_id" : ObjectId("609e76797ec59127f4453887"),
+        "eid" : 103,
+        "ename" : "U",
+        "salary" : 70000
+}
+{
+        "_id" : ObjectId("609ebab980bf6ebd87ebfd80"),
+        "eid" : 106,
+        "ename" : "X",
+        "salary" : 80000
+}
+{
+        "_id" : ObjectId("609ebc5d80bf6ebd87ebfd8e"),
+        "eid" : 107,
+        "ename" : "y",
+        "salary" : 90000
+}
+> db.staff.update({eid:107}, {$set:{ename:"Geeta"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.staff.find({eid:107});
+{ "_id" : ObjectId("609ebc5d80bf6ebd87ebfd8e"), "eid" : 107, "ename" : "Geeta", "salary" : 90000 }
+> db.staff.find({eid:107}).pretty();
+{
+        "_id" : ObjectId("609ebc5d80bf6ebd87ebfd8e"),
+        "eid" : 107,
+        "ename" : "Geeta",
+        "salary" : 90000
+}
+> db.staff.find({ename:{$regex:/ee?/i}}).pretty();
+{
+        "_id" : ObjectId("609ebc5d80bf6ebd87ebfd8e"),
+        "eid" : 107,
+        "ename" : "Geeta",
+        "salary" : 90000
+}
+> db.account.find({p_no:{size:3}}).pretty();
+> db.account.find().pretty();
+{
+        "_id" : ObjectId("609d67124a692a2a5ca023b9"),
+        "a_no" : 1,
+        "name" : "AB",
+        "address" : "Pune",
+        "p_no" : 9978,
+        "balance" : 1000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+{
+        "_id" : ObjectId("609d6c8c4a692a2a5ca023bc"),
+        "a_no" : 3,
+        "name" : "E",
+        "address" : "Nag",
+        "p_no" : null,
+        "balance" : 4000
+}
+> db.account.find({p_no:{$size:3}}).pretty();
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023ba"),
+        "a_no" : 2,
+        "name" : {
+                "fname" : "B",
+                "lname" : "c"
+        },
+        "address" : "Mumbai",
+        "p_no" : [
+                7527,
+                9478,
+                2731
+        ],
+        "balance" : 2000
+}
+{
+        "_id" : ObjectId("609d68674a692a2a5ca023bb"),
+        "a_no" : 3,
+        "name" : "D",
+        "address" : "Nagpur",
+        "p_no" : [
+                752,
+                947,
+                273
+        ],
+        "balance" : 3000
+}
+> db.account.find({p_no:{$lt:{$size:3}}}).pretty();
